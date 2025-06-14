@@ -141,7 +141,7 @@ With the goal of rapidly developing a playable browser-based MVP/Demo, the devel
     - ✅ **Unit Rendering:** Simple visual representation for 1 player unit and 1-2 enemy units (e.g., colored squares/circles).
     - ✅ **Turn Management:** Basic alternating turn system (Player -> Enemy -> Player). Visual indicator of the current turn.
     - **Player Unit Control:**
-        - Select player unit.
+        - ✅ Select player unit.
         - Click on an adjacent valid tile to move the unit.
         - Click on an adjacent enemy unit to perform a basic attack.
     - **Enemy AI (Simple):**
