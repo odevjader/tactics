@@ -97,6 +97,25 @@ function drawUnits() {
     units.forEach(unit => drawUnit(unit));
 }
 
+function isCellOccupied(x, y) {
+    return units.some(unit => unit.x === x && unit.y === y);
+}
+
+function isValidMoveTarget(unit, targetX, targetY) {
+    if (targetX < 0 || targetX >= GRID_SIZE || targetY < 0 || targetY >= GRID_SIZE) {
+        return false; // Out of bounds
+    }
+    if (isCellOccupied(targetX, targetY)) {
+        return false; // Cell is occupied
+    }
+
+    const dx = Math.abs(unit.x - targetX);
+    const dy = Math.abs(unit.y - targetY);
+
+    // Allow only horizontal or vertical movement of 1 cell
+    return (dx === 1 && dy === 0) || (dx === 0 && dy === 1);
+}
+
 function getCurrentTurnUnit() {
     return units[currentPlayerIndex];
 }
@@ -139,29 +158,58 @@ function handleCanvasClick(event) {
     const clickedGridY = Math.floor(clickY / CELL_SIZE);
 
     const currentTurnUnit = getCurrentTurnUnit();
-    let madeSelectionThisClick = false;
+    let actionTakenThisClick = false; // Renamed from madeSelectionThisClick
 
     if (currentTurnUnit && currentTurnUnit.type === 'player') {
-        // Iterate through all player units (MVP has one)
-        units.forEach(unit => {
-            if (unit.type === 'player' && unit.x === clickedGridX && unit.y === clickedGridY) {
-                if (selectedUnit && selectedUnit.id === unit.id) {
-                    // Clicked already selected unit - keep selected or deselect?
-                    // For now, keep selected. To deselect on re-click: selectedUnit = null;
-                    madeSelectionThisClick = true; // Re-confirming selection
+        if (selectedUnit && selectedUnit.id === currentTurnUnit.id) {
+            // Player unit is selected, check for movement
+            if (isValidMoveTarget(selectedUnit, clickedGridX, clickedGridY)) {
+                console.log(`Moving ${selectedUnit.turnDisplayName} from (${selectedUnit.x},${selectedUnit.y}) to (${clickedGridX},${clickedGridY})`);
+                selectedUnit.x = clickedGridX;
+                selectedUnit.y = clickedGridY;
+                actionTakenThisClick = true;
+                selectedUnit = null; // Deselect after move
+                nextTurn(); // End turn after moving
+            } else {
+                // Click was not a valid move for the selected unit.
+                // Check if the click is on the selected unit itself (to keep it selected)
+                // or on another player unit (to switch selection - not for MVP with 1 player unit)
+                // or elsewhere (to deselect).
+                if (currentTurnUnit.x === clickedGridX && currentTurnUnit.y === clickedGridY) {
+                    // Clicked on the currently selected player unit again, keep it selected.
+                    actionTakenThisClick = true;
                 } else {
-                    selectedUnit = unit; // Select the new unit
-                    madeSelectionThisClick = true;
+                    // Clicked elsewhere, not a valid move, and not on the unit itself. Deselect.
+                    selectedUnit = null;
+                    actionTakenThisClick = false; // Explicitly false as no positive action was confirmed
                 }
             }
-        });
+        } else {
+            // No unit selected, or selected unit is not the current turn's player unit.
+            // Try to select a player unit if clicked.
+            units.forEach(unit => {
+                if (unit.type === 'player' && unit.id === currentTurnUnit.id && unit.x === clickedGridX && unit.y === clickedGridY) {
+                    selectedUnit = unit;
+                    actionTakenThisClick = true;
+                }
+            });
+            // If no selection was made by clicking a player unit, ensure deselection if clicked elsewhere.
+            if (!actionTakenThisClick) {
+                selectedUnit = null;
+            }
+        }
+    } else {
+        // Not player's turn, or no current turn unit. Any click deselects.
+        selectedUnit = null;
     }
 
-    if (!madeSelectionThisClick) {
-        selectedUnit = null; // Clicked elsewhere or not player's turn to select
+    // If no action or selection was made, and the click wasn't to keep a unit selected, ensure deselection.
+    // This is a bit redundant with some paths above but acts as a catch-all for deselection.
+    if (!actionTakenThisClick) {
+         selectedUnit = null;
     }
 
-    gameLoop(); // Redraw to show selection changes
+    gameLoop(); // Redraw to show changes
 }
 
 canvas.addEventListener('click', handleCanvasClick);

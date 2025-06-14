@@ -142,7 +142,7 @@ With the goal of rapidly developing a playable browser-based MVP/Demo, the devel
     - ✅ **Turn Management:** Basic alternating turn system (Player -> Enemy -> Player). Visual indicator of the current turn.
     - **Player Unit Control:**
         - ✅ Select player unit.
-        - Click on an adjacent valid tile to move the unit.
+        - ✅ Click on an adjacent valid tile to move the unit.
         - Click on an adjacent enemy unit to perform a basic attack.
     - **Enemy AI (Simple):**
         - Enemy units move towards the player unit if not adjacent.
