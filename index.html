@@ -11,27 +11,6 @@
 </head>
 <body>
     <canvas id="gameCanvas"></canvas>
-    <script>
-        // Basic setup to confirm canvas is accessible
-        const canvas = document.getElementById('gameCanvas');
-        if (canvas) {
-            // Placeholder dimensions - will be set by a later task (e.g., Grid Rendering)
-            canvas.width = 400;
-            canvas.height = 400;
-            const ctx = canvas.getContext('2d');
-            if (ctx) {
-                ctx.fillStyle = '#333';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                ctx.fillStyle = '#fff';
-                ctx.font = '20px Arial';
-                ctx.textAlign = 'center';
-                ctx.fillText('Canvas Ready', canvas.width / 2, canvas.height / 2);
-            } else {
-                console.error('2D context not available');
-            }
-        } else {
-            console.error('Canvas element not found');
-        }
-    </script>
+    <script src="js/main.js"></script>
 </body>
 </html>
