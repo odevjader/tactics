@@ -139,7 +139,7 @@ With the goal of rapidly developing a playable browser-based MVP/Demo, the devel
     - ✅ **Basic HTML Page Setup:** A single HTML page to host the game.
     - ✅ **Canvas Grid Rendering:** Draw a small, fixed-size grid (e.g., 8x8).
     - ✅ **Unit Rendering:** Simple visual representation for 1 player unit and 1-2 enemy units (e.g., colored squares/circles).
-    - **Turn Management:** Basic alternating turn system (Player -> Enemy -> Player). Visual indicator of the current turn.
+    - ✅ **Turn Management:** Basic alternating turn system (Player -> Enemy -> Player). Visual indicator of the current turn.
     - **Player Unit Control:**
         - Select player unit.
         - Click on an adjacent valid tile to move the unit.

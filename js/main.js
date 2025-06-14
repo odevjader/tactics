@@ -15,9 +15,26 @@ let units = [
     { x: 6, y: 2, color: ENEMY_COLOR, hp: 2, type: 'enemy' }    // Enemy 2
 ];
 
+let currentPlayerIndex = 0;
+let enemyCounter = 0; // To give unique names like "Enemy 1", "Enemy 2"
+
 function initializeCanvas() {
     canvas.width = GRID_SIZE * CELL_SIZE;
     canvas.height = GRID_SIZE * CELL_SIZE;
+
+    // Populate turnOrder and assign descriptive names for turn indicator
+    // Also assign an id to each unit for easier reference if needed later
+    enemyCounter = 0; // Reset for name assignment
+    units.forEach((unit, index) => {
+        unit.id = index;
+        if (unit.type === 'player') {
+            unit.turnDisplayName = "Player's Turn";
+        } else {
+            enemyCounter++;
+            unit.turnDisplayName = `Enemy ${enemyCounter}'s Turn`;
+        }
+    });
+    currentPlayerIndex = 0; // Player unit is at index 0
 }
 
 function clearCanvas() {
@@ -64,11 +81,31 @@ function drawUnits() {
     units.forEach(unit => drawUnit(unit));
 }
 
+function getCurrentTurnUnit() {
+    return units[currentPlayerIndex];
+}
+
+function drawTurnIndicator() {
+    const currentUnit = getCurrentTurnUnit();
+    if (!currentUnit || !currentUnit.turnDisplayName) return; // Safety check
+
+    ctx.fillStyle = 'white';
+    ctx.font = '16px Arial';
+    ctx.textAlign = 'left';
+    ctx.fillText(currentUnit.turnDisplayName, 10, 20); // Display in top-left corner
+}
+
 function gameLoop() {
     clearCanvas();
     drawGrid();
-    drawUnits(); // Add this line
-    // Other game drawing and logic will go here in future tasks
+    drawUnits();
+    drawTurnIndicator(); // Add this line
+}
+
+function nextTurn() {
+    currentPlayerIndex = (currentPlayerIndex + 1) % units.length;
+    console.log(getCurrentTurnUnit().turnDisplayName); // Log to console for testing
+    gameLoop(); // Redraw the game state to update turn indicator
 }
 
 // Initialize and start the game loop
@@ -76,3 +113,10 @@ initializeCanvas();
 gameLoop(); // For now, just draw the grid once. Later this might be part of a requestAnimationFrame loop.
 
 console.log('Tactics Saga MVP - Grid Initialized');
+
+// Temporary: Press 'n' to advance turn
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'n') {
+        nextTurn();
+    }
+});

@@ -7,7 +7,7 @@ Este documento rastreia o status de todas as microtarefas do projeto. É gerenci
 | TASK-001 | Basic HTML Page Setup | done | Phase 1 (MVP): Browser-Based Combat Core |
 | TASK-002 | Canvas Grid Rendering | done | Phase 1 (MVP): Browser-Based Combat Core |
 | TASK-003 | Unit Rendering (Player and Enemy) | done | Phase 1 (MVP): Browser-Based Combat Core |
-| TASK-004 | Turn Management System | backlog | Phase 1 (MVP): Browser-Based Combat Core |
+| TASK-004 | Turn Management System | done | Phase 1 (MVP): Browser-Based Combat Core |
 | TASK-005 | Player Unit Selection | backlog | Phase 1 (MVP): Browser-Based Combat Core |
 | TASK-006 | Player Unit Movement | backlog | Phase 1 (MVP): Browser-Based Combat Core |
 | TASK-007 | Player Unit Attack | backlog | Phase 1 (MVP): Browser-Based Combat Core |
