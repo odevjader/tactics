@@ -2,6 +2,44 @@
 
 ## 1. Core Game Mechanics
 
+### 1.0. MVP Scope & Simplifications
+For the initial Minimum Viable Product (MVP) / Demo, the core game mechanics will be significantly simplified to achieve a playable browser-based experience quickly. The detailed mechanics listed in subsequent sections (1.1 to 1.6) represent the broader vision for the game, post-MVP.
+
+**MVP Mechanic Focus:**
+
+- **Combat System (MVP):**
+    - **Grid:** Small, fixed-size grid (e.g., 8x8 or 10x10).
+    - **Units:** 1 player-controlled unit, 1-2 enemy AI units.
+    - **Turn Order:** Simple alternation (Player -> Enemy 1 -> Enemy 2 -> Player...).
+    - **Actions Per Turn (MVP):**
+        - **Move:** Move to an adjacent tile. No complex AP system for MVP.
+        - **Attack:** A single, basic melee attack type against an adjacent unit.
+    - **Damage Calculation (MVP):** Fixed damage amount (e.g., player deals 1 HP damage, enemy deals 1 HP damage). No complex stats or weapon modifiers. Units have minimal HP (e.g., 2-3 HP).
+    - **Status Effects (MVP):** None for the MVP.
+    - **Terrain (MVP):** Plain, uniform grid. No special terrain effects.
+    - **Victory/Defeat (MVP):** Defeat all enemy units to win. Player unit defeated means loss.
+    - **Reaction Abilities/ZOC (MVP):** None for theMVP.
+    - **UI (MVP):** Minimalist. Visual indication of whose turn it is, unit HP (simple text or bars), and basic action selection (e.g., click to move, click enemy to attack).
+
+- **Job System (MVP):**
+    - **No formal job system for MVP.** Player unit will have a predefined role (e.g., "Fighter"). Enemy units will also be simple.
+    - **No abilities beyond basic Move/Attack.**
+
+- **Story/Narrative Structure (MVP):**
+    - **None for MVP.** The focus is purely on the core combat mechanic. A simple "Defeat the Enemies!" message will suffice.
+
+- **World Map & Navigation (MVP):**
+    - **None for MVP.** The game will load directly into a single combat encounter.
+
+- **Character Progression (MVP):**
+    - **None for MVP.** No EXP, leveling, or stat growth.
+    - **No equipment.**
+
+- **In-Game Economy (MVP):**
+    - **None for MVP.**
+
+This highly focused approach for the MVP ensures that a core playable loop can be developed and tested rapidly in the browser.
+
 ### 1.1. Combat System
 - **Genre:** Turn-based tactical RPG.
 - **Perspective:** Isometric grid-based battlefield.
@@ -90,207 +128,91 @@
 - **Item Rarity & Value:** Items will have different tiers of rarity and cost, with more powerful items being more expensive and harder to find.
 - **Shops:** Shop inventories will expand as the player progresses through the story or liberates new regions. Some rare items might only be found in specific locations or as drops from tough enemies.
 
-## 2. Development Phases
+## 2. Development Phases (MVP Focus)
 
-This roadmap outlines a phased approach to development. Timelines are rough estimates and assume a small, dedicated indie team (e.g., 2-4 core members). Actual timelines will vary based on team size, skill, resources, and desired level of polish.
+With the goal of rapidly developing a playable browser-based MVP/Demo, the development phases are restructured to prioritize this initial version. The original, more extensive phases are considered "Post-MVP" and can be revisited if the MVP proves successful and further development is pursued.
 
-### Phase 1: Core Engine & Combat Prototype (Est. 3-6 Months)
-- **Goal:** Develop a playable prototype showcasing the fundamental turn-based combat system.
-- **Key Features:**
-    - Basic game engine setup (chosen engine: Unity, Godot, etc.).
-    - Grid generation and rendering.
-    - Character sprite rendering and basic animation (idle, move, attack).
-    - Pathfinding and character movement on the grid.
-    - Basic turn management system (Speed-based).
-    - Implementation of Move and a basic Attack action.
-    - HP system and damage calculation (simplified).
-    - Simple UI for character stats, actions, and turn order.
-    - One to two playable character classes (e.g., Squire-like melee, Archer-like ranged).
-    - One small test battlefield.
-    - Basic enemy AI (move towards player, attack if in range).
-    - Victory/Defeat conditions (defeat all enemies).
-- **Focus:** Functionality over aesthetics. Get the core loop of combat working.
-- **Potential Risks:**
-    - Choice of game engine leads to unforeseen limitations or performance issues.
-    - Core combat loop feels clunky or unfun, requiring significant redesign.
-    - Underestimation of complexity for grid logic or pathfinding.
-    - Difficulty in establishing an efficient asset pipeline for sprites and animations.
+### Phase 1 (MVP): Browser-Based Combat Core (Est. 2-4 Weeks)
+- **Goal:** Develop a functional and playable minimalist tactical combat demo in a web browser using JavaScript and HTML5 Canvas.
+- **Core Technologies:** Vanilla JavaScript (ES6+), HTML5 Canvas for rendering, basic HTML/CSS for structure.
+- **Key Features (as per MVP Scope in Core Mechanics):**
+    - **Basic HTML Page Setup:** A single HTML page to host the game.
+    - **Canvas Grid Rendering:** Draw a small, fixed-size grid (e.g., 8x8).
+    - **Unit Rendering:** Simple visual representation for 1 player unit and 1-2 enemy units (e.g., colored squares/circles).
+    - **Turn Management:** Basic alternating turn system (Player -> Enemy -> Player). Visual indicator of the current turn.
+    - **Player Unit Control:**
+        - Select player unit.
+        - Click on an adjacent valid tile to move the unit.
+        - Click on an adjacent enemy unit to perform a basic attack.
+    - **Enemy AI (Simple):**
+        - Enemy units move towards the player unit if not adjacent.
+        - Enemy units attack the player unit if adjacent.
+    - **Combat Resolution:**
+        - Units have minimal HP (e.g., 2-3 HP).
+        - Attacks deal fixed damage (e.g., 1 HP).
+        - Visual feedback for attacks (e.g., unit flashes red).
+        - Units are removed from the grid when HP reaches 0.
+    - **Win/Loss Conditions:**
+        - **Win:** Player defeats all enemy units. Display a simple "You Win!" message.
+        - **Loss:** Player's unit is defeated. Display a simple "You Lose!" message.
+    - **Minimal UI:**
+        - Display unit HP (e.g., small number next to unit).
+        - Buttons or clickable areas for "End Turn" (if manual turn end is desired, otherwise automatic after action).
+        - Clear visual distinction between player and enemy units.
+- **Focus:** Core gameplay loop (Move -> Attack -> Enemy Response). Functionality and playability are paramount. Aesthetics are secondary for the MVP.
+- **Potential Risks (MVP Specific):**
+    - Canvas rendering performance for even simple scenes might be tricky if not optimized from the start (though unlikely for MVP scope).
+    - Implementing even simple grid logic (valid moves, adjacency) can be error-prone.
+    - Vanilla JS state management can become messy quickly; good structure is needed from the outset.
+    - Balancing the simple MVP (e.g., number of enemies, HP) to be engaging enough for a short demo.
+    - Time underestimation, even for a "simple" MVP.
 
-### Phase 2: Job System & Character Progression (Est. 4-6 Months)
-- **Goal:** Implement the job system and fundamental character progression mechanics.
-- **Key Features:**
-    - Design and implement 3-5 base jobs (e.g., Squire, Chemist, Archer, Black Mage, White Mage).
-    - Implement Job Point (JP) earning and spending system.
-    - Create skill trees for the initial set of jobs with a selection of action, reaction, and support abilities.
-    - Implement ability learning and equipping.
-    - EXP and leveling system for characters.
-    - Stat growth tied to job and character level.
-    - Basic equipment system (weapon, armor slots) with stat modifiers.
-    - UI for managing jobs, abilities, and equipment.
-    - System for unlocking new jobs (prerequisites).
-- **Focus:** Adding depth to character development and combat options.
-- **Potential Risks:**
-    - Balancing the initial set of jobs and abilities proves difficult.
-    - Skill tree implementation is more complex than anticipated.
-    - Player progression feels too slow or too fast.
-    - UI for managing many skills and jobs becomes cluttered or difficult to use.
+### Post-MVP Phases (Placeholder)
+Following a successful MVP, development could proceed by incrementally adding features from the original, more comprehensive roadmap. This might include:
+- **Phase 2 (Post-MVP): Enhanced Combat & Basic Job System:** Introduce more unit types, basic stats, a couple of distinct abilities, and a rudimentary job selection.
+- **Phase 3 (Post-MVP): Narrative & World Elements:** Begin to layer in story elements, a simple world map, and more varied encounters.
+- *Further phases would draw from the original detailed roadmap, adapting as needed.*
 
-### Phase 3: Story Implementation - First Arc (Est. 5-8 Months)
-- **Goal:** Develop the first major arc of the story, including narrative elements and associated battles.
-- **Key Features:**
-    - Write and script the main storyline for the first 2-3 chapters.
-    - Design and implement 5-7 story battles with unique objectives and terrain.
-    - Introduce 2-3 key story characters with unique sprites (and possibly special jobs later).
-    - Create in-engine cutscene system (dialogue boxes, character portraits, basic camera movement).
-    - Implement world map navigation (point-to-point).
-    - Basic shop system in one or two town locations (buy/sell items).
-    - Introduce the first set of equipment (weapons, armor).
-    - Music and basic sound effects integration for combat and cutscenes.
-- **Focus:** Bringing the game world to life and providing a narrative context for the gameplay.
-- **Potential Risks:**
-    - Story writing and scripting take longer than expected.
-    - Integrating narrative with gameplay seamlessly is challenging.
-    - Cutscene system is too basic or difficult to work with, limiting storytelling.
-    - Maintaining player interest through the first arc is difficult.
+The immediate priority is the successful completion and testing of **Phase 1 (MVP): Browser-Based Combat Core**.
 
-### Phase 4: Content Expansion - Systems & Initial World Building (Est. 6-9 Months)
-- **Goal:** Expand on existing systems, add more content, and flesh out the game world.
-- **Key Features:**
-    - Implement 3-5 advanced jobs and their skill trees.
-    - Add more abilities to existing jobs.
-    - Introduce status effects (positive and negative) into combat.
-    - Refine enemy AI (use of skills, targeting priorities).
-    - Implement random encounters on the world map.
-    - Design and add 2-3 optional side quest chains.
-    - Expand the world map with more locations, towns, and dungeons.
-    - More diverse enemy types and formations.
-    - Add more equipment tiers and special item properties.
-    - Implement a tavern/rumor system for side quest hints.
-    - System for recruiting generic units.
-- **Focus:** Increasing variety, replayability, and depth of content.
-- **Potential Risks:**
-    - Scope creep: adding too many jobs, abilities, or systems makes balancing and completion difficult.
-    - Random encounters become tedious or poorly balanced.
-    - Side quests feel generic or unrewarding.
-    - New systems don't integrate well with existing core mechanics.
+## 3. Technology Stack for Browser-Based MVP
 
-### Phase 5: Content Polish & Pre-Alpha (Est. 4-6 Months)
-- **Goal:** Polish existing content, add more advanced features, and prepare for broader testing.
-- **Key Features:**
-    - Implement remaining planned jobs (including special/unique jobs).
-    - Complete all planned abilities for all jobs.
-    - Advanced AI tactics and teamwork for enemies.
-    - Implement the full range of planned equipment, including unique and legendary items.
-    - Add unique battle mechanics (e.g., environmental hazards, interactive objects on battlefield).
-    - Story completion for the main narrative.
-    - All planned side quests and optional content.
-    - Art polish: character animations, spell effects, UI improvements.
-    - Sound design polish: unique sound effects for abilities, ambient sounds.
-    - Initial balancing pass for jobs, abilities, economy, and enemy difficulty.
-    - Tutorial system implementation.
-    - Implement Permadeath option (Classic/Casual modes).
-- **Focus:** Bringing all elements to a feature-complete state and improving overall presentation.
-- **Potential Risks:**
-    - Feature creep continues, delaying polish and bug fixing.
-    - Balancing the vast amount of content (jobs, skills, items, enemies) becomes overwhelming.
-    - Story pacing suffers in later stages of the game.
-    - Performance issues arise as more content and effects are added.
-    - Tutorial system is insufficient or tedious for players.
+For the initial Minimum Viable Product (MVP) / Demo, the goal is to create a simple, playable experience directly in a web browser. This dictates a lightweight and readily available technology stack.
 
-### Phase 6: Alpha/Beta Testing & Bug Fixing (Est. 3-6 Months)
-- **Goal:** Extensive testing, bug fixing, balancing, and incorporating player feedback.
-- **Key Features:**
-    - **Alpha Testing (Internal/Friends & Family):** Focus on major bugs, system stability, and core gameplay feedback.
-    - **Beta Testing (Closed/Open):** Broader testing pool to find more obscure bugs, gather balancing feedback, and assess player experience.
-    - Iterative balancing of jobs, abilities, items, and enemy encounters based on feedback.
-    - Performance optimization.
-    - UI/UX refinement based on feedback.
-    - Intensive bug hunting and fixing.
-    - Localization preparation (if planned).
-- **Focus:** Stability, balance, and refining the player experience.
-- **Potential Risks:**
-    - Critical bugs are discovered late in testing, requiring significant rework.
-    - Player feedback on balance is contradictory or difficult to implement.
-    - Burnout within the development team from prolonged bug fixing.
-    - Inability to gather a diverse enough pool of testers.
-    - Performance on target hardware does not meet expectations.
+### 3.1. Core Technologies
+- **Language: JavaScript (JS)**
+    - **Rationale:** JavaScript is the native language of web browsers, requiring no plugins or complex setup for users to play the game. It has a vast ecosystem of libraries and is well-suited for interactive web applications.
+    - **Considerations:** We will use modern JavaScript (ES6+) for better syntax and features. No complex frameworks (like React, Angular, Vue) will be used for the initial MVP to keep things simple, focusing on vanilla JS for core logic.
+- **Rendering: HTML5 Canvas API**
+    - **Rationale:** The Canvas API provides a powerful 2D drawing surface directly in HTML. It's ideal for rendering grids, sprites (or simple shapes for the MVP), and game effects without external dependencies.
+    - **Considerations:** We'll manage the game loop (update, draw) and handle all rendering logic (drawing grid lines, units, UI elements) directly using Canvas drawing commands.
+- **Structure: HTML & CSS**
+    - **Rationale:** Basic HTML will structure the game page (containing the canvas element, any simple UI buttons, or text displays). CSS will be used for minimal styling of these HTML elements.
+    - **Considerations:** The focus will be on functionality over elaborate design for the MVP.
 
-### Phase 7: Release & Post-Launch Support (Ongoing)
-- **Goal:** Launch the game and provide ongoing support.
-- **Key Features:**
-    - Final marketing push and release preparation.
-    - Launch on chosen platform(s).
-    - Monitor player feedback and bug reports post-launch.
-    - Release patches for critical bugs and balancing issues.
-    - Potential for future content (DLC, expansions, sequels) if successful.
-- **Focus:** Successful launch and maintaining player satisfaction.
-- **Potential Risks:**
-    - Unforeseen server issues or platform-specific problems at launch.
-    - Negative initial reviews impact sales and morale.
-    - Marketing efforts don't reach the target audience effectively.
-    - Underestimation of post-launch support needs (patching, community management).
-    - Sales do not meet expectations, impacting ability to fund future content or support.
+### 3.2. Art & Animation (MVP Simplification)
+- **Initial Assets:** For the MVP, character and enemy representations might be simple geometric shapes (e.g., colored squares/circles) or placeholder static sprites if readily available.
+- **Animation:** Complex animations will be avoided for the MVP. Movement might be simple position updates, and attacks could be indicated by a brief visual effect (e.g., a flashing color or a projectile line).
 
-## 3. Technology Stack Considerations
+### 3.3. Version Control
+- **Git:** Still essential. GitHub, GitLab, or Bitbucket will be used for repository hosting.
 
-Choosing the right technology stack is crucial for the project's success. This section outlines key considerations rather than prescribing a specific stack, as the best choice depends on team expertise, project scope, and specific goals.
+### 3.4. Project Management & Communication
+- **Tools:** For a solo developer MVP, project management can be simpler (e.g., a checklist). Communication is internal.
 
-### 3.1. Game Engine
-A game engine provides a foundational framework, including rendering, physics, input handling, and asset management, significantly speeding up development.
+### 3.5. Development Approach for MVP
+- **Focus:** Rapid prototyping of the core combat loop.
+- **Modularity:** While keeping it simple, structure the JavaScript code logically (e.g., separate modules/objects for game state, rendering, unit logic) to allow for easier expansion post-MVP.
+- **No External Libraries (Initially):** To maintain simplicity and control for the MVP, we will avoid external game engines or complex utility libraries unless absolutely necessary.
 
-- **Considerations:**
-    - **2D vs. 2.5D vs. 3D:**
-        - **2D:** Simpler to develop assets for, generally faster performance on lower-end hardware. Good for a classic pixel art or hand-drawn aesthetic. Engines like Godot (with its dedicated 2D pipeline), Unity (with 2D tools), or GameMaker Studio are strong contenders.
-        - **2.5D (Isometric):** This is the classic FFT style. Achievable in both 2D and 3D engines.
-            - Using a 3D engine (e.g., Unity, Unreal, Godot 3D) allows for true height differences, dynamic camera angles, and potentially more sophisticated visual effects. Character models would be 3D, but presented on a 2D grid.
-            - Using a 2D engine with isometric projection techniques is also possible and can be simpler for teams more comfortable with 2D workflows. Asset creation might involve careful sprite work to simulate depth.
-    - **Ease of Use & Learning Curve:** Consider the team's familiarity with the engine. A steeper learning curve can slow down initial development.
-    - **Community & Support:** A large, active community means more tutorials, readily available assets, and help when encountering problems.
-    - **Feature Set:** Does the engine have built-in tools that are beneficial for a tactical RPG (e.g., good UI system, animation tools, pathfinding libraries)?
-    - **Performance:** Ensure the engine can handle the number of units and complexity of maps planned for the game without performance issues.
-    - **Target Platforms:** If planning to release on multiple platforms (PC, consoles, mobile), choose an engine with good cross-platform support.
-    - **Licensing & Cost:** Understand the engine's licensing terms and any associated costs (e.g., revenue sharing, subscription fees).
-
-- **Popular Engine Options:**
-    - **Unity:** Very popular, versatile (strong in both 2D and 3D), large asset store, extensive documentation and community. C# is the primary language. Good for isometric 2.5D or 3D approaches.
-    - **Godot Engine:** Free and open-source, gaining popularity rapidly. Strong dedicated 2D pipeline and capable 3D. Uses GDScript (Python-like), C#, and supports C++. Excellent choice for 2D or 2.5D isometric games.
-    - **Unreal Engine:** Powerful, particularly for high-fidelity 3D graphics. Uses C++ and Blueprints (visual scripting). Might be overkill for a more classic FFT-style game unless aiming for a very modern 3D take, and has a steeper learning curve.
-    - **GameMaker Studio:** Primarily focused on 2D games, known for its ease of use. Uses its own GML (GameMaker Language). Could be suitable for a purely 2D isometric approach.
-    - **RPG Maker Series:** Specifically designed for creating RPGs. While good for traditional JRPGs, it might be restrictive or require significant modification/plugins for a tactical grid-based system.
-
-### 3.2. Programming Language
-The choice of programming language is often tied to the game engine.
-
-- **Considerations:**
-    - **Engine Compatibility:** Most engines have a primary language (e.g., C# for Unity, GDScript/C# for Godot, C++ for Unreal).
-    - **Team Expertise:** Leverage the existing skills of your development team.
-    - **Performance:** Compiled languages (C++, C#) generally offer better performance than interpreted languages, which can be important for complex game logic.
-    - **Development Speed:** Some languages (like Python or GDScript) can offer faster iteration and development speed for certain tasks.
-    - **Available Libraries:** Access to libraries for common tasks (e.g., pathfinding, UI management) can be beneficial.
-
-### 3.3. Art & Animation Tools
-- **Pixel Art:** Aseprite, GraphicsGale, Photoshop/GIMP.
-- **2D Digital Painting:** Krita, Photoshop, GIMP, Clip Studio Paint.
-- **3D Modeling & Animation (if choosing a 3D approach for characters/environments):** Blender (free and open-source), Maya, 3ds Max.
-- **Animation Software:** Spine (for 2D skeletal animation), Unity's built-in animation tools, Godot's animation tools.
-
-### 3.4. Version Control
-- **Git:** Essential for collaborative development, tracking changes, and managing different versions of the project. Platforms like GitHub, GitLab, or Bitbucket can host repositories.
-
-### 3.5. Project Management & Communication
-- **Tools like Trello, Asana, Jira (for task management), and Discord/Slack (for team communication) are highly recommended.**
-
-**Recommendation for an FFT-like game:**
-For a project aiming to replicate the feel of Final Fantasy Tactics, with a small to medium-sized team:
-- **Engine:** Godot or Unity would be strong choices.
-    - **Godot:** Excellent for 2D or 2.5D isometric. Its node system can be very intuitive for structuring game elements. Free and open-source is a big plus for indie teams.
-    - **Unity:** Very versatile, great asset store, and robust community support. Well-suited for a 2.5D (3D models on a grid) or a more advanced 3D take on the genre.
-- **Language:** GDScript or C# (if using Godot/Unity).
-- **Art Style:** Pixel art or stylized low-poly 3D can capture the classic feel while being manageable for smaller teams.
-
-Ultimately, the team should create small prototypes in their top engine choices to evaluate which best fits their workflow and the game's vision before committing fully.
+This streamlined stack allows for quick iteration and focuses all effort on delivering a playable core experience in the browser.
 
 ## 4. Team Role Considerations
+
+### 4.0. MVP Development Team
+For the initial Browser-Based MVP (as outlined in "## 2. Development Phases (MVP Focus)"), the development will be undertaken by a single developer (Jules). This means the roles of Game Designer, Programmer, and initial Artist (using placeholder graphics) and Tester will be consolidated. The primary focus is on implementing the core technical features of the MVP.
+
+The subsequent detailed roles (4.1 to 4.3) provide a broader view for potential team expansion post-MVP.
 
 Developing a game, especially a tactical RPG, involves various disciplines. For a small indie team, individuals often wear multiple hats. However, understanding the key roles can help in planning and resource allocation.
 
