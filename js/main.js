@@ -4,6 +4,17 @@ const ctx = canvas.getContext('2d');
 const GRID_SIZE = 8; // 8x8 grid
 const CELL_SIZE = 50; // Each cell is 50x50 pixels
 
+// Unit definitions
+const PLAYER_COLOR = 'blue';
+const ENEMY_COLOR = 'red';
+const UNIT_SIZE_FACTOR = 0.8; // Make unit smaller than cell
+
+let units = [
+    { x: 1, y: 1, color: PLAYER_COLOR, hp: 3, type: 'player' }, // Player unit
+    { x: 5, y: 5, color: ENEMY_COLOR, hp: 2, type: 'enemy' },   // Enemy 1
+    { x: 6, y: 2, color: ENEMY_COLOR, hp: 2, type: 'enemy' }    // Enemy 2
+];
+
 function initializeCanvas() {
     canvas.width = GRID_SIZE * CELL_SIZE;
     canvas.height = GRID_SIZE * CELL_SIZE;
@@ -35,9 +46,28 @@ function drawGrid() {
     }
 }
 
+function drawUnit(unit) {
+    const unitSize = CELL_SIZE * UNIT_SIZE_FACTOR;
+    const offsetX = (CELL_SIZE - unitSize) / 2; // Center unit in cell
+    const offsetY = (CELL_SIZE - unitSize) / 2;
+
+    ctx.fillStyle = unit.color;
+    ctx.fillRect(
+        unit.x * CELL_SIZE + offsetX,
+        unit.y * CELL_SIZE + offsetY,
+        unitSize,
+        unitSize
+    );
+}
+
+function drawUnits() {
+    units.forEach(unit => drawUnit(unit));
+}
+
 function gameLoop() {
     clearCanvas();
     drawGrid();
+    drawUnits(); // Add this line
     // Other game drawing and logic will go here in future tasks
 }
 
