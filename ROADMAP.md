@@ -158,7 +158,7 @@ With the goal of rapidly developing a playable browser-based MVP/Demo, the devel
     - **Minimal UI:**
         - ✅ Display unit HP (e.g., small number next to unit).
         - ✅ Buttons or clickable areas for "End Turn" (if manual turn end is desired, otherwise automatic after action).
-        - Clear visual distinction between player and enemy units.
+        - ✅ Clear visual distinction between player and enemy units.
 - **Focus:** Core gameplay loop (Move -> Attack -> Enemy Response). Functionality and playability are paramount. Aesthetics are secondary for the MVP.
 - **Potential Risks (MVP Specific):**
     - Canvas rendering performance for even simple scenes might be tricky if not optimized from the start (though unlikely for MVP scope).
