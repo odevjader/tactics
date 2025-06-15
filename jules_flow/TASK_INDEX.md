@@ -11,7 +11,7 @@ Este documento rastreia o status de todas as microtarefas do projeto. É gerenci
 | TASK-005 | Player Unit Selection | done | Phase 1 (MVP): Browser-Based Combat Core |
 | TASK-006 | Player Unit Movement | done | Phase 1 (MVP): Browser-Based Combat Core |
 | TASK-007 | Player Unit Attack | done | Phase 1 (MVP): Browser-Based Combat Core |
-| TASK-008 | Enemy AI: Movement towards Player | backlog | Phase 1 (MVP): Browser-Based Combat Core |
+| TASK-008 | Enemy AI: Movement towards Player | done | Phase 1 (MVP): Browser-Based Combat Core |
 | TASK-009 | Enemy AI: Attack Player when Adjacent | backlog | Phase 1 (MVP): Browser-Based Combat Core |
 | TASK-010 | Combat Resolution: HP and Damage | backlog | Phase 1 (MVP): Browser-Based Combat Core |
 | TASK-011 | Combat Resolution: Visual Feedback for Attacks | backlog | Phase 1 (MVP): Browser-Based Combat Core |

@@ -137,6 +137,55 @@ function isAdjacent(unit1, unit2OrX, y) {
     return (dx === 1 && dy === 0) || (dx === 0 && dy === 1);
 }
 
+function findPlayerUnit() {
+    return units.find(unit => unit.type === 'player');
+}
+
+function executeEnemyTurn(enemyUnit) {
+    console.log(`Executing turn for ${enemyUnit.turnDisplayName}`);
+    const playerUnit = findPlayerUnit();
+
+    if (!playerUnit) {
+        console.log("No player unit found. Enemy ${enemyUnit.turnDisplayName} does nothing.");
+        setTimeout(nextTurn, 500);
+        return;
+    }
+
+    if (isAdjacent(enemyUnit, playerUnit)) {
+        console.log(`${enemyUnit.turnDisplayName} is adjacent to player. Holding position.`);
+        setTimeout(nextTurn, 500);
+        return;
+    }
+
+    let moved = false;
+    const dx = playerUnit.x - enemyUnit.x;
+    const dy = playerUnit.y - enemyUnit.y;
+
+    if (dx !== 0) { // Try X movement first
+        const stepX = Math.sign(dx);
+        if (isValidMoveTarget(enemyUnit, enemyUnit.x + stepX, enemyUnit.y)) {
+            enemyUnit.x += stepX;
+            moved = true;
+            console.log(`${enemyUnit.turnDisplayName} moves to (${enemyUnit.x},${enemyUnit.y})`);
+        }
+    }
+
+    if (!moved && dy !== 0) { // Else try Y movement
+        const stepY = Math.sign(dy);
+        if (isValidMoveTarget(enemyUnit, enemyUnit.x, enemyUnit.y + stepY)) {
+            enemyUnit.y += stepY;
+            moved = true;
+            console.log(`${enemyUnit.turnDisplayName} moves to (${enemyUnit.x},${enemyUnit.y})`);
+        }
+    }
+
+    if (!moved) {
+        console.log(`${enemyUnit.turnDisplayName} could not move or chose to hold.`);
+    }
+    // gameLoop(); // Redraw immediately after potential move - REMOVED, nextTurn will call gameLoop
+    setTimeout(nextTurn, 500); // End turn after a delay
+}
+
 function getCurrentTurnUnit() {
     return units[currentPlayerIndex];
 }
@@ -160,8 +209,17 @@ function gameLoop() {
 
 function nextTurn() {
     currentPlayerIndex = (currentPlayerIndex + 1) % units.length;
-    console.log(getCurrentTurnUnit().turnDisplayName); // Log to console for testing
-    gameLoop(); // Redraw the game state to update turn indicator
+    const currentUnit = getCurrentTurnUnit();
+    console.log(`Turn advanced to: ${currentUnit.turnDisplayName}`);
+
+    selectedUnit = null;
+
+    gameLoop(); // Redraw for the new turn (e.g. turn indicator update)
+
+    if (currentUnit.type === 'enemy') {
+        setTimeout(() => executeEnemyTurn(currentUnit), 250); // Short delay for AI "thinking"
+    }
+    // For player's turn, gameLoop() already called, waiting for input.
 }
 
 // Initialize and start the game loop
@@ -239,8 +297,8 @@ function handleCanvasClick(event) {
 canvas.addEventListener('click', handleCanvasClick);
 
 // Temporary: Press 'n' to advance turn
-document.addEventListener('keydown', function(event) {
-    if (event.key === 'n') {
-        nextTurn();
-    }
-});
+// document.addEventListener('keydown', function(event) {
+//     if (event.key === 'n') {
+//         nextTurn();
+//     }
+// });
