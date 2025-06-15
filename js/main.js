@@ -155,7 +155,10 @@ function executeEnemyTurn(enemyUnit) {
         // Enemy is adjacent, so ATTACK
         console.log(`${enemyUnit.turnDisplayName} attacks ${playerUnit.turnDisplayName}!`);
         playerUnit.hp -= 1; // MVP fixed damage
-        console.log(`${playerUnit.turnDisplayName} HP is now ${playerUnit.hp}`);
+        if (playerUnit.hp < 0) {
+            playerUnit.hp = 0; // Corrected line
+        }
+        console.log(`${playerUnit.turnDisplayName} HP is now ${playerUnit.hp}`); // Log potentially clamped HP
         // Attack action taken, then end turn
         setTimeout(nextTurn, 500);
         return;
@@ -260,7 +263,10 @@ function handleCanvasClick(event) {
                 if (targetUnit && targetUnit.type === 'enemy' && isAdjacent(selectedUnit, targetUnit)) {
                     console.log(`${selectedUnit.turnDisplayName} attacks ${targetUnit.turnDisplayName} at (${targetUnit.x},${targetUnit.y})`);
                     targetUnit.hp -= 1; // MVP fixed damage
-                    console.log(`${targetUnit.turnDisplayName} HP is now ${targetUnit.hp}`);
+                    if (targetUnit.hp < 0) {
+                        targetUnit.hp = 0;
+                    }
+                    console.log(`${targetUnit.turnDisplayName} HP is now ${targetUnit.hp}`); // Log potentially clamped HP
                     actionTakenThisClick = true;
                     selectedUnit = null; // Deselect after attack
                     nextTurn();
