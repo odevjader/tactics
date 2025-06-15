@@ -20,15 +20,26 @@ All specific MVP features and tasks are documented as completed in the `jules_fl
 
 The following phases outline the plan to expand from the MVP to a full-featured tactical RPG.
 
-### Phase 2: Enhanced Combat & Basic Job System
-**Goal:** Introduce more depth to combat mechanics and lay the groundwork for character customization.
+### Phase 2: Isometric View, Core Combat Enhancements & Basic Jobs
+**Goal:** Transition to an isometric perspective, introduce more depth to combat mechanics, add multi-level terrain, and lay the groundwork for character customization.
 **Key Features:**
+- **Architectural Shift: Isometric View Implementation:**
+    - Refactor grid data structures and logic for isometric coordinate system.
+    - Update rendering engine (`drawGrid`, `drawUnit`, `drawVisualEffects`, etc.) for isometric projection.
+    - Implement basic depth sorting for units and map elements.
+    - Convert mouse click coordinates to isometric grid coordinates.
+    - Define requirements for isometric art assets (placeholder or initial style).
+- **Multi-Level Terrain Mechanics:**
+    - Implement data storage for tile heights.
+    - Define rules for movement between different heights (e.g., step height, jump stat).
+    - Basic impact of height on line of sight and attack range (e.g., high ground bonuses).
+    - Visual representation of height differences within the isometric view.
 - **Advanced Combat Mechanics (integrating ideas from original section 1.1):**
     - Action Points (AP) system.
-    - Basic character stats (e.g., Speed, Strength, HP/MP pools).
+    - Basic character stats (e.g., Speed, Strength, HP/MP pools, Jump).
     - Introduce 1-2 new unit types/roles.
-    - Expand attack types (e.g., simple ranged, basic magic/skill).
-    - Damage calculation incorporating stats.
+    - Expand attack types (e.g., simple ranged, basic magic/skill), considering height.
+    - Damage calculation incorporating stats and potentially height advantages.
 - **Rudimentary Job System (integrating ideas from original section 1.2):**
     - Player unit can switch between 2-3 basic jobs (e.g., Fighter, Archer, Healer).
     - Each job provides 1-2 unique active abilities.
@@ -36,6 +47,7 @@ The following phases outline the plan to expand from the MVP to a full-featured 
 - **UI Enhancements:**
     - Display AP, MP (if applicable).
     - Basic ability selection menu.
+    - Adapt UI elements (HP display, turn indicator) for isometric view if needed.
 
 ### Phase 3: Core Systems Expansion - Progression, Economy, and World
 **Goal:** Build out systems for character growth, resource management, and initial world interaction.
@@ -97,8 +109,9 @@ The following phases outline the plan to expand from the MVP to a full-featured 
 **Goal:** Launch the game and provide ongoing support.
 
 ## Technology Vision
-The game will continue to be developed using **JavaScript (ES6+)** and the **HTML5 Canvas API** for rendering, maintaining the architecture established in the MVP. Future considerations may include:
-- Performance optimizations as complexity grows.
+The game will continue to be developed using **JavaScript (ES6+)** and the **HTML5 Canvas API**.
+- **Architectural Evolution:** A significant update will be undertaken to support an **isometric perspective and multi-level terrain rendering** on the Canvas. This will involve refactoring grid logic and rendering systems.
+- Performance optimizations will be crucial as complexity grows with the new perspective and features.
 - Minimal, targeted use of external libraries for specific needs only if vanilla JS proves insufficient.
 - Continued focus on modular code structure.
 
