@@ -146,7 +146,7 @@ With the goal of rapidly developing a playable browser-based MVP/Demo, the devel
         - ✅ Click on an adjacent enemy unit to perform a basic attack.
     - **Enemy AI (Simple):**
         - ✅ Enemy units move towards the player unit if not adjacent.
-        - Enemy units attack the player unit if adjacent.
+        - ✅ Enemy units attack the player unit if adjacent.
     - **Combat Resolution:**
         - Units have minimal HP (e.g., 2-3 HP).
         - Attacks deal fixed damage (e.g., 1 HP).

@@ -146,17 +146,22 @@ function executeEnemyTurn(enemyUnit) {
     const playerUnit = findPlayerUnit();
 
     if (!playerUnit) {
-        console.log("No player unit found. Enemy ${enemyUnit.turnDisplayName} does nothing.");
+        console.log(`No player unit found. Enemy ${enemyUnit.turnDisplayName} does nothing.`);
         setTimeout(nextTurn, 500);
         return;
     }
 
     if (isAdjacent(enemyUnit, playerUnit)) {
-        console.log(`${enemyUnit.turnDisplayName} is adjacent to player. Holding position.`);
+        // Enemy is adjacent, so ATTACK
+        console.log(`${enemyUnit.turnDisplayName} attacks ${playerUnit.turnDisplayName}!`);
+        playerUnit.hp -= 1; // MVP fixed damage
+        console.log(`${playerUnit.turnDisplayName} HP is now ${playerUnit.hp}`);
+        // Attack action taken, then end turn
         setTimeout(nextTurn, 500);
         return;
     }
 
+    // If not adjacent, proceed with movement logic (this part remains unchanged)
     let moved = false;
     const dx = playerUnit.x - enemyUnit.x;
     const dy = playerUnit.y - enemyUnit.y;
