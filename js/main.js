@@ -161,7 +161,8 @@ function executeEnemyTurn(enemyUnit) {
         }
         }
         console.log(`${playerUnit.turnDisplayName} HP is now ${playerUnit.hp}`); // Log potentially clamped HP
-        addHitSpark(playerUnit.x, playerUnit.y); // Add this line
+        addHitSpark(playerUnit.x, playerUnit.y);
+        cleanupDefeatedUnits(); // Add this line
         // Attack action taken, then end turn
         setTimeout(nextTurn, 500);
         return;
@@ -199,6 +200,20 @@ function executeEnemyTurn(enemyUnit) {
 
 function getCurrentTurnUnit() {
     return units[currentPlayerIndex];
+}
+
+function cleanupDefeatedUnits() {
+    let unitsRemovedOriginalCount = units.length;
+    units = units.filter(unit => {
+        if (unit.hp > 0) {
+            return true;
+        } else {
+            console.log(`${unit.turnDisplayName} (ID: ${unit.id}) has been defeated and removed.`);
+            return false;
+        }
+    });
+    // currentPlayerIndex will be adjusted by nextTurn using the new units.length
+    return units.length !== unitsRemovedOriginalCount;
 }
 
 function drawTurnIndicator() {
@@ -303,7 +318,8 @@ function handleCanvasClick(event) {
                         targetUnit.hp = 0;
                     }
                     console.log(`${targetUnit.turnDisplayName} HP is now ${targetUnit.hp}`); // Log potentially clamped HP
-                    addHitSpark(targetUnit.x, targetUnit.y); // Add this line
+                    addHitSpark(targetUnit.x, targetUnit.y);
+                    cleanupDefeatedUnits(); // Add this line
                     actionTakenThisClick = true;
                     selectedUnit = null; // Deselect after attack
                     nextTurn();
