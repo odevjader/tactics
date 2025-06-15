@@ -172,9 +172,9 @@ function executeEnemyTurn(enemyUnit) {
         console.log(`${enemyUnit.turnDisplayName} attacks ${playerUnit.turnDisplayName}!`);
         playerUnit.hp -= 1; // MVP fixed damage
         if (playerUnit.hp < 0) {
-            playerUnit.hp = 0; // Corrected line
+            playerUnit.hp = 0;
         }
-        }
+        // Extra brace removed
         console.log(`${playerUnit.turnDisplayName} HP is now ${playerUnit.hp}`); // Log potentially clamped HP
         addHitSpark(playerUnit.x, playerUnit.y);
         cleanupDefeatedUnits();
