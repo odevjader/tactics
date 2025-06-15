@@ -69,31 +69,35 @@ function drawGrid() {
 
 function drawUnit(unit) {
     const unitSize = CELL_SIZE * UNIT_SIZE_FACTOR;
-    const offsetX = (CELL_SIZE - unitSize) / 2;
-    const offsetY = (CELL_SIZE - unitSize) / 2;
+    // Unit's top-left corner for drawing its fill
+    const fillX = unit.x * CELL_SIZE + (CELL_SIZE - unitSize) / 2;
+    const fillY = unit.y * CELL_SIZE + (CELL_SIZE - unitSize) / 2;
 
-    const unitXPos = unit.x * CELL_SIZE;
-    const unitYPos = unit.y * CELL_SIZE;
-
+    // Draw unit body
     ctx.fillStyle = unit.color;
-    ctx.fillRect(
-        unitXPos + offsetX,
-        unitYPos + offsetY,
-        unitSize,
-        unitSize
-    );
+    ctx.fillRect(fillX, fillY, unitSize, unitSize);
 
-    // Draw selection indicator
+    // Draw selection indicator (using previous accepted logic)
     if (selectedUnit && selectedUnit.id === unit.id) {
-        ctx.strokeStyle = 'yellow'; // Selection color
+        ctx.strokeStyle = 'yellow';
         ctx.lineWidth = 2;
         ctx.strokeRect(
-            unitXPos + offsetX - ctx.lineWidth, // Adjust for lineWidth to be outside
-            unitYPos + offsetY - ctx.lineWidth,
+            fillX - ctx.lineWidth,
+            fillY - ctx.lineWidth,
             unitSize + ctx.lineWidth * 2,
             unitSize + ctx.lineWidth * 2
         );
     }
+
+    // Draw HP text
+    ctx.fillStyle = 'white';
+    ctx.font = 'bold 14px Arial'; // Slightly larger font
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    // Calculate center of the drawn unit for text positioning
+    const textX = fillX + unitSize / 2;
+    const textY = fillY + unitSize / 2;
+    ctx.fillText(unit.hp.toString(), textX, textY);
 }
 
 function drawUnits() {

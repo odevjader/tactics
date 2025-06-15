@@ -156,7 +156,7 @@ With the goal of rapidly developing a playable browser-based MVP/Demo, the devel
         - ✅ **Win:** Player defeats all enemy units. Display a simple "You Win!" message.
         - ✅ **Loss:** Player's unit is defeated. Display a simple "You Lose!" message.
     - **Minimal UI:**
-        - Display unit HP (e.g., small number next to unit).
+        - ✅ Display unit HP (e.g., small number next to unit).
         - Buttons or clickable areas for "End Turn" (if manual turn end is desired, otherwise automatic after action).
         - Clear visual distinction between player and enemy units.
 - **Focus:** Core gameplay loop (Move -> Attack -> Enemy Response). Functionality and playability are paramount. Aesthetics are secondary for the MVP.
