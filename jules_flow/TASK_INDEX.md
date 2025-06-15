@@ -17,7 +17,7 @@ Este documento rastreia o status de todas as microtarefas do projeto. É gerenci
 | TASK-011 | Combat Resolution: Visual Feedback for Attacks | done | Phase 1 (MVP): Browser-Based Combat Core |
 | TASK-012 | Combat Resolution: Unit Removal at 0 HP | done | Phase 1 (MVP): Browser-Based Combat Core |
 | TASK-013 | Win Condition: Defeat All Enemies | done | Phase 1 (MVP): Browser-Based Combat Core |
-| TASK-014 | Loss Condition: Player Unit Defeated | backlog | Phase 1 (MVP): Browser-Based Combat Core |
+| TASK-014 | Loss Condition: Player Unit Defeated | done | Phase 1 (MVP): Browser-Based Combat Core |
 | TASK-015 | Minimal UI: Display Unit HP | backlog | Phase 1 (MVP): Browser-Based Combat Core |
 | TASK-016 | Minimal UI: End Turn Button/Mechanism | backlog | Phase 1 (MVP): Browser-Based Combat Core |
 | TASK-017 | Minimal UI: Visual Distinction of Units | backlog | Phase 1 (MVP): Browser-Based Combat Core |

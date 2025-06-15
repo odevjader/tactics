@@ -165,7 +165,8 @@ function executeEnemyTurn(enemyUnit) {
         console.log(`${playerUnit.turnDisplayName} HP is now ${playerUnit.hp}`); // Log potentially clamped HP
         addHitSpark(playerUnit.x, playerUnit.y);
         cleanupDefeatedUnits();
-        checkWinCondition(); // Add this line
+        checkLossCondition(); // Add this line
+        checkWinCondition();
         // Attack action taken, then end turn
         setTimeout(nextTurn, 500);
         return;
@@ -236,6 +237,21 @@ function gameLoop() {
     drawVisualEffects();
     drawTurnIndicator();
     drawGameOverMessage(); // Add this line
+}
+
+function checkLossCondition() {
+    if (gameOver) return; // Don't check if game is already over
+
+    const playerUnitsAlive = units.some(unit => unit.type === 'player' && unit.hp > 0);
+
+    if (!playerUnitsAlive) {
+        // Check if there were player units to begin with.
+        // For MVP, we assume the setup always includes a player.
+        // If no player units are left alive, it's a loss.
+        gameOver = true;
+        gameStatusMessage = "You Lose!";
+        console.log(gameStatusMessage);
+    }
 }
 
 function checkWinCondition() {
@@ -362,7 +378,8 @@ function handleCanvasClick(event) {
                     console.log(`${targetUnit.turnDisplayName} HP is now ${targetUnit.hp}`); // Log potentially clamped HP
                     addHitSpark(targetUnit.x, targetUnit.y);
                     cleanupDefeatedUnits();
-                    checkWinCondition(); // Add this line
+                    checkLossCondition(); // Add this line
+                    checkWinCondition();
                     actionTakenThisClick = true;
                     selectedUnit = null; // Deselect after attack
                     nextTurn();
