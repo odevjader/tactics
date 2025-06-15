@@ -18,6 +18,7 @@ let units = [
 let currentPlayerIndex = 0;
 let enemyCounter = 0; // To give unique names like "Enemy 1", "Enemy 2"
 let selectedUnit = null;
+let visualEffects = []; // To store temporary visual effects like hit sparks
 
 function initializeCanvas() {
     canvas.width = GRID_SIZE * CELL_SIZE;
@@ -158,7 +159,9 @@ function executeEnemyTurn(enemyUnit) {
         if (playerUnit.hp < 0) {
             playerUnit.hp = 0; // Corrected line
         }
+        }
         console.log(`${playerUnit.turnDisplayName} HP is now ${playerUnit.hp}`); // Log potentially clamped HP
+        addHitSpark(playerUnit.x, playerUnit.y); // Add this line
         // Attack action taken, then end turn
         setTimeout(nextTurn, 500);
         return;
@@ -212,7 +215,40 @@ function gameLoop() {
     clearCanvas();
     drawGrid();
     drawUnits();
-    drawTurnIndicator(); // Add this line
+    drawVisualEffects(); // Add this line
+    drawTurnIndicator();
+}
+
+function addHitSpark(xGrid, yGrid) {
+    visualEffects.push({
+        x: xGrid * CELL_SIZE + CELL_SIZE / 2, // Center of the cell
+        y: yGrid * CELL_SIZE + CELL_SIZE / 2, // Center of the cell
+        radius: CELL_SIZE / 3, // Radius of the spark
+        color: 'yellow',
+        duration: 10, // Lasts for 10 frames/game loops
+        maxDuration: 10
+    });
+}
+
+function drawVisualEffects() {
+    for (let i = visualEffects.length - 1; i >= 0; i--) {
+        const effect = visualEffects[i];
+
+        // Example: draw a shrinking, fading circle
+        const currentRadius = effect.radius * (effect.duration / effect.maxDuration);
+        ctx.beginPath();
+        ctx.arc(effect.x, effect.y, currentRadius, 0, Math.PI * 2);
+        ctx.fillStyle = effect.color;
+        // Optional: fade effect
+        // ctx.globalAlpha = effect.duration / effect.maxDuration;
+        ctx.fill();
+        // ctx.globalAlpha = 1.0; // Reset alpha
+
+        effect.duration--;
+        if (effect.duration <= 0) {
+            visualEffects.splice(i, 1); // Remove expired effect
+        }
+    }
 }
 
 function nextTurn() {
@@ -267,6 +303,7 @@ function handleCanvasClick(event) {
                         targetUnit.hp = 0;
                     }
                     console.log(`${targetUnit.turnDisplayName} HP is now ${targetUnit.hp}`); // Log potentially clamped HP
+                    addHitSpark(targetUnit.x, targetUnit.y); // Add this line
                     actionTakenThisClick = true;
                     selectedUnit = null; // Deselect after attack
                     nextTurn();

@@ -150,7 +150,7 @@ With the goal of rapidly developing a playable browser-based MVP/Demo, the devel
     - **Combat Resolution:**
         - ✅ Units have minimal HP (e.g., 2-3 HP).
         - ✅ Attacks deal fixed damage (e.g., 1 HP).
-        - Visual feedback for attacks (e.g., unit flashes red).
+        - ✅ Visual feedback for attacks (e.g., unit flashes red).
         - Units are removed from the grid when HP reaches 0.
     - **Win/Loss Conditions:**
         - **Win:** Player defeats all enemy units. Display a simple "You Win!" message.
