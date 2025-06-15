@@ -19,5 +19,5 @@ Este documento rastreia o status de todas as microtarefas do projeto. É gerenci
 | TASK-013 | Win Condition: Defeat All Enemies | done | Phase 1 (MVP): Browser-Based Combat Core |
 | TASK-014 | Loss Condition: Player Unit Defeated | done | Phase 1 (MVP): Browser-Based Combat Core |
 | TASK-015 | Minimal UI: Display Unit HP | done | Phase 1 (MVP): Browser-Based Combat Core |
-| TASK-016 | Minimal UI: End Turn Button/Mechanism | backlog | Phase 1 (MVP): Browser-Based Combat Core |
+| TASK-016 | Minimal UI: End Turn Button/Mechanism | done | Phase 1 (MVP): Browser-Based Combat Core |
 | TASK-017 | Minimal UI: Visual Distinction of Units | backlog | Phase 1 (MVP): Browser-Based Combat Core |

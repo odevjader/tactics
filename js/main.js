@@ -7,6 +7,15 @@ const CELL_SIZE = 50; // Each cell is 50x50 pixels
 // Unit definitions
 const PLAYER_COLOR = 'blue';
 const ENEMY_COLOR = 'red';
+
+const END_TURN_BUTTON_X = GRID_SIZE * CELL_SIZE + 10; // Position to the right of the grid
+const END_TURN_BUTTON_Y = 10;
+const END_TURN_BUTTON_WIDTH = 100;
+const END_TURN_BUTTON_HEIGHT = 30;
+const END_TURN_BUTTON_COLOR = 'gray';
+const END_TURN_BUTTON_TEXT_COLOR = 'white';
+const END_TURN_BUTTON_TEXT = "End Turn";
+
 const UNIT_SIZE_FACTOR = 0.8; // Make unit smaller than cell
 
 let units = [
@@ -23,8 +32,8 @@ let gameOver = false;
 let gameStatusMessage = ""; // Will hold "You Win!" or "You Lose!"
 
 function initializeCanvas() {
-    canvas.width = GRID_SIZE * CELL_SIZE;
-    canvas.height = GRID_SIZE * CELL_SIZE;
+    canvas.width = GRID_SIZE * CELL_SIZE + END_TURN_BUTTON_WIDTH + 20; // New line, adding space
+    canvas.height = GRID_SIZE * CELL_SIZE; // Height can remain the same for now
 
     // Populate turnOrder and assign descriptive names for turn indicator
     // Also assign an id to each unit for easier reference if needed later
@@ -240,7 +249,24 @@ function gameLoop() {
     drawUnits();
     drawVisualEffects();
     drawTurnIndicator();
-    drawGameOverMessage(); // Add this line
+    drawEndTurnButton(); // Add this line
+    drawGameOverMessage();
+}
+
+function drawEndTurnButton() {
+    if (gameOver) return; // Don't draw if game is over
+
+    const currentUnit = getCurrentTurnUnit();
+    if (currentUnit && currentUnit.type === 'player') {
+        ctx.fillStyle = END_TURN_BUTTON_COLOR;
+        ctx.fillRect(END_TURN_BUTTON_X, END_TURN_BUTTON_Y, END_TURN_BUTTON_WIDTH, END_TURN_BUTTON_HEIGHT);
+
+        ctx.fillStyle = END_TURN_BUTTON_TEXT_COLOR;
+        ctx.font = '14px Arial';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(END_TURN_BUTTON_TEXT, END_TURN_BUTTON_X + END_TURN_BUTTON_WIDTH / 2, END_TURN_BUTTON_Y + END_TURN_BUTTON_HEIGHT / 2);
+    }
 }
 
 function checkLossCondition() {
