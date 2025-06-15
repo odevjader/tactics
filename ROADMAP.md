@@ -143,7 +143,7 @@ With the goal of rapidly developing a playable browser-based MVP/Demo, the devel
     - **Player Unit Control:**
         - ✅ Select player unit.
         - ✅ Click on an adjacent valid tile to move the unit.
-        - Click on an adjacent enemy unit to perform a basic attack.
+        - ✅ Click on an adjacent enemy unit to perform a basic attack.
     - **Enemy AI (Simple):**
         - Enemy units move towards the player unit if not adjacent.
         - Enemy units attack the player unit if adjacent.

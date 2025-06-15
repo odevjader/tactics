@@ -116,6 +116,27 @@ function isValidMoveTarget(unit, targetX, targetY) {
     return (dx === 1 && dy === 0) || (dx === 0 && dy === 1);
 }
 
+function getUnitAt(x, y) {
+    return units.find(unit => unit.x === x && unit.y === y);
+}
+
+function isAdjacent(unit1, unit2OrX, y) {
+    let x2, y2;
+    if (typeof unit2OrX === 'object' && unit2OrX !== null && 'x' in unit2OrX && 'y' in unit2OrX) {
+        x2 = unit2OrX.x;
+        y2 = unit2OrX.y;
+    } else if (typeof unit2OrX === 'number' && typeof y === 'number') {
+        x2 = unit2OrX;
+        y2 = y;
+    } else {
+        return false; // Invalid arguments
+    }
+
+    const dx = Math.abs(unit1.x - x2);
+    const dy = Math.abs(unit1.y - y2);
+    return (dx === 1 && dy === 0) || (dx === 0 && dy === 1);
+}
+
 function getCurrentTurnUnit() {
     return units[currentPlayerIndex];
 }
@@ -158,53 +179,56 @@ function handleCanvasClick(event) {
     const clickedGridY = Math.floor(clickY / CELL_SIZE);
 
     const currentTurnUnit = getCurrentTurnUnit();
-    let actionTakenThisClick = false; // Renamed from madeSelectionThisClick
+    let actionTakenThisClick = false;
 
     if (currentTurnUnit && currentTurnUnit.type === 'player') {
         if (selectedUnit && selectedUnit.id === currentTurnUnit.id) {
-            // Player unit is selected, check for movement
+            // Player unit is selected, check for MOVEMENT first
             if (isValidMoveTarget(selectedUnit, clickedGridX, clickedGridY)) {
                 console.log(`Moving ${selectedUnit.turnDisplayName} from (${selectedUnit.x},${selectedUnit.y}) to (${clickedGridX},${clickedGridY})`);
                 selectedUnit.x = clickedGridX;
                 selectedUnit.y = clickedGridY;
                 actionTakenThisClick = true;
                 selectedUnit = null; // Deselect after move
-                nextTurn(); // End turn after moving
+                nextTurn();
             } else {
-                // Click was not a valid move for the selected unit.
-                // Check if the click is on the selected unit itself (to keep it selected)
-                // or on another player unit (to switch selection - not for MVP with 1 player unit)
-                // or elsewhere (to deselect).
-                if (currentTurnUnit.x === clickedGridX && currentTurnUnit.y === clickedGridY) {
-                    // Clicked on the currently selected player unit again, keep it selected.
+                // Not a valid move. Check for ATTACK.
+                const targetUnit = getUnitAt(clickedGridX, clickedGridY);
+                if (targetUnit && targetUnit.type === 'enemy' && isAdjacent(selectedUnit, targetUnit)) {
+                    console.log(`${selectedUnit.turnDisplayName} attacks ${targetUnit.turnDisplayName} at (${targetUnit.x},${targetUnit.y})`);
+                    targetUnit.hp -= 1; // MVP fixed damage
+                    console.log(`${targetUnit.turnDisplayName} HP is now ${targetUnit.hp}`);
                     actionTakenThisClick = true;
+                    selectedUnit = null; // Deselect after attack
+                    nextTurn();
                 } else {
-                    // Clicked elsewhere, not a valid move, and not on the unit itself. Deselect.
-                    selectedUnit = null;
-                    actionTakenThisClick = false; // Explicitly false as no positive action was confirmed
+                    // Not a valid move or a valid attack.
+                    // If click is on selected unit, keep selected. Otherwise, deselect.
+                    if (selectedUnit.x === clickedGridX && selectedUnit.y === clickedGridY) {
+                        actionTakenThisClick = true; // Kept selection
+                    } else {
+                        selectedUnit = null; // Clicked elsewhere
+                    }
                 }
             }
         } else {
-            // No unit selected, or selected unit is not the current turn's player unit.
-            // Try to select a player unit if clicked.
+            // No unit selected (or not the current player's unit), try to SELECT a player unit.
             units.forEach(unit => {
                 if (unit.type === 'player' && unit.id === currentTurnUnit.id && unit.x === clickedGridX && unit.y === clickedGridY) {
                     selectedUnit = unit;
                     actionTakenThisClick = true;
                 }
             });
-            // If no selection was made by clicking a player unit, ensure deselection if clicked elsewhere.
-            if (!actionTakenThisClick) {
+            if (!actionTakenThisClick) { // If no selection was made
                 selectedUnit = null;
             }
         }
     } else {
-        // Not player's turn, or no current turn unit. Any click deselects.
+        // Not player's turn. Any click deselects.
         selectedUnit = null;
     }
 
-    // If no action or selection was made, and the click wasn't to keep a unit selected, ensure deselection.
-    // This is a bit redundant with some paths above but acts as a catch-all for deselection.
+    // If no specific action (move, attack, select, re-select) was confirmed, deselect.
     if (!actionTakenThisClick) {
          selectedUnit = null;
     }
