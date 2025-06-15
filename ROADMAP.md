@@ -153,7 +153,7 @@ With the goal of rapidly developing a playable browser-based MVP/Demo, the devel
         - ✅ Visual feedback for attacks (e.g., unit flashes red).
         - ✅ Units are removed from the grid when HP reaches 0.
     - **Win/Loss Conditions:**
-        - **Win:** Player defeats all enemy units. Display a simple "You Win!" message.
+        - ✅ **Win:** Player defeats all enemy units. Display a simple "You Win!" message.
         - **Loss:** Player's unit is defeated. Display a simple "You Lose!" message.
     - **Minimal UI:**
         - Display unit HP (e.g., small number next to unit).

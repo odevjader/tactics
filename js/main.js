@@ -19,6 +19,8 @@ let currentPlayerIndex = 0;
 let enemyCounter = 0; // To give unique names like "Enemy 1", "Enemy 2"
 let selectedUnit = null;
 let visualEffects = []; // To store temporary visual effects like hit sparks
+let gameOver = false;
+let gameStatusMessage = ""; // Will hold "You Win!" or "You Lose!"
 
 function initializeCanvas() {
     canvas.width = GRID_SIZE * CELL_SIZE;
@@ -162,7 +164,8 @@ function executeEnemyTurn(enemyUnit) {
         }
         console.log(`${playerUnit.turnDisplayName} HP is now ${playerUnit.hp}`); // Log potentially clamped HP
         addHitSpark(playerUnit.x, playerUnit.y);
-        cleanupDefeatedUnits(); // Add this line
+        cleanupDefeatedUnits();
+        checkWinCondition(); // Add this line
         // Attack action taken, then end turn
         setTimeout(nextTurn, 500);
         return;
@@ -230,8 +233,39 @@ function gameLoop() {
     clearCanvas();
     drawGrid();
     drawUnits();
-    drawVisualEffects(); // Add this line
+    drawVisualEffects();
     drawTurnIndicator();
+    drawGameOverMessage(); // Add this line
+}
+
+function checkWinCondition() {
+    if (gameOver) return;
+
+    const playerUnitsAlive = units.some(unit => unit.type === 'player' && unit.hp > 0); // Player must be alive
+    if (!playerUnitsAlive) return; // If player is already defeated, don't declare win. Loss condition will handle.
+
+    const remainingEnemies = units.filter(unit => unit.type === 'enemy' && unit.hp > 0).length;
+
+    // Check if there were enemies to begin with.
+    // For MVP, we assume the setup always includes enemies.
+    // If remainingEnemies is 0, it implies all started enemies are defeated.
+    if (remainingEnemies === 0) {
+        gameOver = true;
+        gameStatusMessage = "You Win!";
+        console.log(gameStatusMessage);
+    }
+}
+
+function drawGameOverMessage() {
+    if (!gameOver) return;
+
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.7)'; // Semi-transparent background for message
+    ctx.fillRect(0, canvas.height / 2 - 30, canvas.width, 60);
+
+    ctx.font = '30px Arial';
+    ctx.fillStyle = 'white';
+    ctx.textAlign = 'center';
+    ctx.fillText(gameStatusMessage, canvas.width / 2, canvas.height / 2 + 10);
 }
 
 function addHitSpark(xGrid, yGrid) {
@@ -276,6 +310,10 @@ function nextTurn() {
     gameLoop(); // Redraw for the new turn (e.g. turn indicator update)
 
     if (currentUnit.type === 'enemy') {
+        if (gameOver) {
+            console.log("Game is over. Enemy will not act.");
+            return; // Don't schedule enemy turn if game over
+        }
         setTimeout(() => executeEnemyTurn(currentUnit), 250); // Short delay for AI "thinking"
     }
     // For player's turn, gameLoop() already called, waiting for input.
@@ -288,6 +326,10 @@ gameLoop(); // For now, just draw the grid once. Later this might be part of a r
 console.log('Tactics Saga MVP - Grid Initialized');
 
 function handleCanvasClick(event) {
+    if (gameOver) {
+        console.log("Game is over. No further actions allowed.");
+        return;
+    }
     const rect = canvas.getBoundingClientRect();
     const clickX = event.clientX - rect.left;
     const clickY = event.clientY - rect.top;
@@ -319,7 +361,8 @@ function handleCanvasClick(event) {
                     }
                     console.log(`${targetUnit.turnDisplayName} HP is now ${targetUnit.hp}`); // Log potentially clamped HP
                     addHitSpark(targetUnit.x, targetUnit.y);
-                    cleanupDefeatedUnits(); // Add this line
+                    cleanupDefeatedUnits();
+                    checkWinCondition(); // Add this line
                     actionTakenThisClick = true;
                     selectedUnit = null; // Deselect after attack
                     nextTurn();
