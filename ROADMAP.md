@@ -27,7 +27,7 @@
     -   [ ] **Secondary Stats:** `DerivedStats { HP, MaxHP, MP, MaxMP, Attack, Defense, MagicAttack, MagicDefense, Hit, Evasion, CritChance, CritDamage, MoveRange, JumpHeight }`. These are calculated from Primary Stats + Equipment + Buffs. A dedicated system will recalculate these whenever gear or status changes.
     -   [ ] **Battle State:** `GridPosition { x, y, z }`, `ActionPoints(u32)`, `ChargeTime(u32)`, `CurrentStatus(Vec<StatusEffect>)`, `Resistances(HashMap<Element, f32>)`.
 
-4.  **State Machine:**
+✅ 4.  **State Machine:**
     -   [ ] Implement a robust `GameState` enum: `MainMenu`, `WorldMap`, `PartyManagement`, `BattleLoading`, `Battle`, `BattleVictoryScreen`. This controls which systems run at any given time.
 
 ---
