@@ -21,7 +21,7 @@
         -   `assets/data/classes/`, `assets/data/races/`, `assets/data/skills/`, `assets/data/items/`, `assets/data/maps/`.
     -   [ ] **RON Definitions:** Define the Rust `structs` that `serde` will use to parse all data. This includes `ClassData`, `ItemData`, etc., with all their stats and properties.
 
-3.  **Core Component Library (`components.rs`):**
+✅ 3.  **Core Component Library (`components.rs`):**
     -   [ ] **Identity:** `UnitID(String)`, `Name(String)`, `PlayerControlled`, `AIControlled { profile: AIProfile }`.
     -   [ ] **Primary Stats:** `PrimaryStats { Strength, Dexterity, Agility, Intelligence, Vitality, Luck }`. These are the character's innate stats.
     -   [ ] **Secondary Stats:** `DerivedStats { HP, MaxHP, MP, MaxMP, Attack, Defense, MagicAttack, MagicDefense, Hit, Evasion, CritChance, CritDamage, MoveRange, JumpHeight }`. These are calculated from Primary Stats + Equipment + Buffs. A dedicated system will recalculate these whenever gear or status changes.

@@ -6,7 +6,7 @@ Este documento rastreia o status de todas as microtarefas do projeto. É gerenci
 |----------|------------------------------------------------|----------|-----------------------------------------------------|
 | TASK-001 | Setup Project Scaffolding                      | done     | Phase 0: The Engine - Architecture & Core Systems |
 | TASK-002 | Implement Data-Driven Asset & Content Pipeline | done     | Phase 0: The Engine - Architecture & Core Systems |
-| TASK-003 | Develop Core Component Library                 | backlog  | Phase 0: The Engine - Architecture & Core Systems |
+| TASK-003 | Develop Core Component Library                 | done     | Phase 0: The Engine - Architecture & Core Systems |
 | TASK-004 | Implement Game State Machine                   | backlog  | Phase 0: The Engine - Architecture & Core Systems |
 | TASK-005 | Implement The Living Battlefield System        | backlog  | Phase 1: The Tactical Core - A Rich 'Vertical Slice' |
 | TASK-006 | Implement 'Charge Time' (CT) Turn System     | backlog  | Phase 1: The Tactical Core - A Rich 'Vertical Slice' |

@@ -1,5 +1,6 @@
 mod data_defs;
-mod data_loading; // Added module
+mod data_loading;
+mod components; // Added module
 
 use bevy::prelude::*;
 
