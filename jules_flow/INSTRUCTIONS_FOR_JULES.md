@@ -75,12 +75,13 @@ Processo:
     *   Realizar todas as alterações de código necessárias no branch `jules` para cumprir os "Critérios de Aceitação" da tarefa.
     *   Testar as alterações (adicionar testes unitários, se aplicável).
 
-3.  **Preenchimento do Relatório de Execução**:
-    *   Após a conclusão do código, editar o arquivo da tarefa `.md`.
+3.  **Preenchimento do Relatório de Execução e Atualização de Status (Arquivo da Tarefa)**:
+    *   Após a conclusão do código, editar o arquivo da tarefa `.md` (ainda em `/jules_flow/backlog/`).
     *   Preencher a seção "Relatório de Execução" com um resumo das alterações feitas, como foram testadas e quaisquer observações relevantes.
-
-4.  **Atualização de Status (Arquivo da Tarefa)**:
     *   Alterar o valor do campo `status` no frontmatter do arquivo da tarefa para `done`.
+
+4.  **Movimentação do Arquivo da Tarefa para `done`**:
+    *   Mover o arquivo da tarefa `.md` (já atualizado com relatório e status `done`) da pasta `/jules_flow/backlog/` para `/jules_flow/done/`. **Esta ação deve ser rastreada pelo Git (ex: usando `git mv`)**.
 
 5.  **Atualização do `TASK_INDEX.md`**:
     *   Ler o arquivo `TASK_INDEX.md`.
@@ -95,13 +96,10 @@ Processo:
     *   Realizar um único commit no branch `jules`.
     *   O commit deve incluir:
         *   Todas as alterações de código.
-        *   O arquivo da tarefa `.md` atualizado (com o relatório e status `done`).
+        *   O arquivo da tarefa `.md` movido e atualizado (localizado agora em `/jules_flow/done/`).
         *   O arquivo `TASK_INDEX.md` atualizado.
         *   O arquivo `ROADMAP.md` atualizado.
     *   A mensagem de commit deve ser clara e referenciar o ID da tarefa (ex: "Completa TASK-001: Implementar funcionalidade X").
-
-8.  **Movimentação de Arquivo**:
-    *   Mover o arquivo da tarefa `.md` da pasta `/jules_flow/backlog/` para `/jules_flow/done/`.
 
 ## Manutenção do Sistema
 
