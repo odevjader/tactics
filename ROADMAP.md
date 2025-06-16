@@ -1,268 +1,146 @@
-# Game Roadmap: Tactics Saga (Working Title)
+# Roadmap for the Tactics Saga game
 
-## 1. Core Game Mechanics
+## Core Pillars & Philosophy
+-   **Deep Customization:** Player choice must matter profoundly. The joy comes from breaking the system with clever character builds.
+-   **Tactical Depth:** The battlefield itself is a character. Terrain, height, positioning, and turn order are weapons.
+-   **Addictive Progression:** A powerful, rewarding loop of "Battle -> Loot/XP -> Upgrade -> Stronger in next Battle". The player should always be chasing the next power spike.
+-   **Data-Driven Architecture:** The solo developer's creed. The game's code is the *engine*; the game's content lives in RON files. This is non-negotiable for a project of this scope.
 
-### 1.0. MVP Scope & Simplifications
-For the initial Minimum Viable Product (MVP) / Demo, the core game mechanics will be significantly simplified to achieve a playable browser-based experience quickly. The detailed mechanics listed in subsequent sections (1.1 to 1.6) represent the broader vision for the game, post-MVP.
+---
 
-**MVP Mechanic Focus:**
+### **Phase 0: The Engine - Architecture & Core Systems (3-4 Weeks)**
 
-- **Combat System (MVP):**
-    - **Grid:** Small, fixed-size grid (e.g., 8x8 or 10x10).
-    - **Units:** 1 player-controlled unit, 1-2 enemy AI units.
-    - **Turn Order:** Simple alternation (Player -> Enemy 1 -> Enemy 2 -> Player...).
-    - **Actions Per Turn (MVP):**
-        - **Move:** Move to an adjacent tile. No complex AP system for MVP.
-        - **Attack:** A single, basic melee attack type against an adjacent unit.
-    - **Damage Calculation (MVP):** Fixed damage amount (e.g., player deals 1 HP damage, enemy deals 1 HP damage). No complex stats or weapon modifiers. Units have minimal HP (e.g., 2-3 HP).
-    - **Status Effects (MVP):** None for the MVP.
-    - **Terrain (MVP):** Plain, uniform grid. No special terrain effects.
-    - **Victory/Defeat (MVP):** Defeat all enemy units to win. Player unit defeated means loss.
-    - **Reaction Abilities/ZOC (MVP):** None for theMVP.
-    - **UI (MVP):** Minimalist. Visual indication of whose turn it is, unit HP (simple text or bars), and basic action selection (e.g., click to move, click enemy to attack).
+*Objective: Forge the unbreakable foundation. This phase is pure, unglamorous, but critical systems programming.*
 
-- **Job System (MVP):**
-    - **No formal job system for MVP.** Player unit will have a predefined role (e.g., "Fighter"). Enemy units will also be simple.
-    - **No abilities beyond basic Move/Attack.**
+1.  **Project Scaffolding:**
+    -   Setup project with `cargo`, `bevy`, `serde`, `ron`, `bevy_ecs_tilemap`, `bevy_pathfinding`.
+    -   Establish a strict module structure: `src/main.rs`, `src/state.rs`, `src/systems/`, `src/components.rs`, `src/data_loading.rs`, `src/battle/`.
 
-- **Story/Narrative Structure (MVP):**
-    - **None for MVP.** The focus is purely on the core combat mechanic. A simple "Defeat the Enemies!" message will suffice.
+2.  **Data-Driven Asset & Content Pipeline:**
+    -   [ ] **Master Loader System:** A single system responsible for loading all `.ron` files from `assets/data/` into Bevy `Resources` or `Assets` on startup.
+        -   `assets/data/classes/`, `assets/data/races/`, `assets/data/skills/`, `assets/data/items/`, `assets/data/maps/`.
+    -   [ ] **RON Definitions:** Define the Rust `structs` that `serde` will use to parse all data. This includes `ClassData`, `ItemData`, etc., with all their stats and properties.
 
-- **World Map & Navigation (MVP):**
-    - **None for MVP.** The game will load directly into a single combat encounter.
+3.  **Core Component Library (`components.rs`):**
+    -   [ ] **Identity:** `UnitID(String)`, `Name(String)`, `PlayerControlled`, `AIControlled { profile: AIProfile }`.
+    -   [ ] **Primary Stats:** `PrimaryStats { Strength, Dexterity, Agility, Intelligence, Vitality, Luck }`. These are the character's innate stats.
+    -   [ ] **Secondary Stats:** `DerivedStats { HP, MaxHP, MP, MaxMP, Attack, Defense, MagicAttack, MagicDefense, Hit, Evasion, CritChance, CritDamage, MoveRange, JumpHeight }`. These are calculated from Primary Stats + Equipment + Buffs. A dedicated system will recalculate these whenever gear or status changes.
+    -   [ ] **Battle State:** `GridPosition { x, y, z }`, `ActionPoints(u32)`, `ChargeTime(u32)`, `CurrentStatus(Vec<StatusEffect>)`, `Resistances(HashMap<Element, f32>)`.
 
-- **Character Progression (MVP):**
-    - **None for MVP.** No EXP, leveling, or stat growth.
-    - **No equipment.**
+4.  **State Machine:**
+    -   [ ] Implement a robust `GameState` enum: `MainMenu`, `WorldMap`, `PartyManagement`, `BattleLoading`, `Battle`, `BattleVictoryScreen`. This controls which systems run at any given time.
 
-- **In-Game Economy (MVP):**
-    - **None for MVP.**
+---
 
-This highly focused approach for the MVP ensures that a core playable loop can be developed and tested rapidly in the browser.
+### **Phase 1: The Tactical Core - A Rich "Vertical Slice" (8-12 Weeks)**
 
-### 1.1. Combat System
-- **Genre:** Turn-based tactical RPG.
-- **Perspective:** Isometric grid-based battlefield.
-- **Turn Order:** Determined by a speed statistic (e.g., Agility or Speed). A visible turn order list/timeline will be displayed.
-- **Actions Per Turn:** Characters will have Action Points (AP) or a similar system. Standard actions might include:
-    - **Move:** Traverse a certain number of grid squares, affected by terrain and character mobility.
-    - **Action:** Perform a skill, attack, or use an item. Some powerful abilities might consume more action points or even the entire turn.
-    - **Wait/Defend:** End turn, possibly with a defensive bonus.
-- **Attack Types:**
-    - **Melee:** Close-quarters combat, damage influenced by strength and weapon power. Accuracy affected by character's skill and target's evasion.
-    - **Ranged:** Attacks from a distance (bows, guns, etc.), damage influenced by dexterity and weapon power. Line of sight and range are critical.
-    - **Magical:** Spells that can deal damage, heal, or inflict status effects. Damage/effectiveness influenced by magic power. Spells may have casting times or MP (Mana Points) costs.
-    - **AoE (Area of Effect):** Abilities that affect multiple tiles/characters.
-- **Damage Calculation:** Factors will include attacker's relevant stat (Strength, Dexterity, Magic Power), weapon/ability power, defender's defenses (Physical Defense, Magical Defense), elemental affinities/resistances, and possibly a random variance. Critical hits will also be a factor.
-- **Status Effects:** Positive (buffs) and negative (debuffs) conditions like Poison, Slow, Haste, Protect, Shell, Blind, Silence, Berserk, Charm, etc. Each will have clear effects and durations.
-- **Terrain:** The battlefield grid will feature varied terrain types that can affect movement, attack range, accuracy, and provide defensive bonuses (e.g., high ground, forests, water).
-- **Friendly Fire:** To be decided, but typically present in this genre for added tactical depth (especially for AoE).
-- **Victory/Defeat Conditions:** Typically "Defeat all enemies," "Defeat a specific boss unit," "Protect a VIP," "Reach a specific location," etc. Losing all player units or a key story character usually results in defeat.
-- **ZOC (Zone of Control):** Units may exert a Zone of Control on adjacent tiles, potentially hindering enemy movement or triggering reaction abilities.
-- **Reaction Abilities:** (e.g., Counter-attack, Auto-Potion) Skills that trigger automatically in response to specific events.
+*Objective: Create a single, deeply tactical battle map that feels like a finished game, just with limited content.*
 
-### 1.2. Job System (Class System)
-- **Overview:** Characters can switch between various jobs, each with unique stat growths, equippable gear, and a distinct set of abilities.
-- **Base Jobs:** A set of starting jobs (e.g., Squire, Chemist).
-- **Advanced Jobs:** Unlocked by reaching certain levels in one or more base jobs (e.g., Knight from Squire, White Mage from Chemist).
-- **Special Jobs:** Unique jobs, perhaps for specific story characters, with powerful and distinct abilities.
-- **Job Levels (JP/SP):** Characters earn Job Points (JP) or Skill Points (SP) in their current job by performing actions in combat. These points are used to learn new abilities from that job's skill tree.
-- **Abilities:**
-    - **Action Abilities:** Actively used commands in combat (e.g., Fire spell, Power Break attack).
-    - **Reaction Abilities:** Triggered in response to game events (e.g., Counter, Regenerate).
-    - **Support Abilities:** Passive bonuses or effects (e.g., +10% HP, Equip Axes).
-    - **Movement Abilities:** Enhance mobility or provide unique movement options (e.g., Ignore Terrain, Fly).
-- **Skill Inheritance:** Characters may be able to equip a secondary skillset from another mastered job, or mix and match learned support/reaction abilities, allowing for deep customization.
-- **Unlocking New Jobs:** A clear system for unlocking jobs (e.g., "Squire Lv. 3 + Chemist Lv. 2 = Knight"). This will be visible to the player.
+1.  **The Living Battlefield:**
+    -   [ ] **Map System:** Load maps from RON files, defining not just tile heights, but tile types (`TileType::Grass`, `::Water`, `::Thorns`, `::Ice`) which affect movement cost and apply status effects on entry.
+    -   [ ] **Line of Sight (LoS):** Implement LoS checks. Archers cannot shoot through mountains. Some spells might ignore LoS.
+    -   [ ] **Camera System:** A polished, player-friendly isometric camera: rotate, pan, zoom, and a "snap to active unit" function.
 
-### 1.3. Story/Narrative Structure
-- **Format:** The game will be divided into chapters or acts, each containing a series of story-driven battles and narrative sequences.
-- **Narrative Delivery:**
-    - **Cutscenes:** In-engine cutscenes with character sprites/portraits and dialogue boxes before and after key battles.
-    - **World Map Events:** Short narrative events or dialogues that occur when moving between locations or at specific points in the story.
-    - **Battle Dialogue:** Characters may have specific lines during combat, reacting to events or other characters.
-- **Main Quest Line:** A central storyline driving the player through the game.
-- **Side Quests/Optional Battles:** Additional missions and battles that provide extra rewards, lore, or unique character recruitment opportunities. These will not be mandatory for completing the main story.
-- **Player Choices (Minor):** While the main story will be linear, there might be minor choices in side quests or dialogues that offer different small rewards or dialogue variations, but not branching major plotlines to keep development scope manageable.
-- **Themes:** (To be defined by the writer, but common themes in the genre include war, betrayal, justice, class struggle, corruption, and the search for power or peace).
+2.  **The "Charge Time" (CT) Turn System (a la FFT):**
+    -   [ ] At the start of every "tick", every unit on the field gains `CT` equal to its `Agility`.
+    -   [ ] When a unit's `CT >= 100`, it gets a turn. Its `CT` is reset to 0.
+    -   [ ] **This is key:** Actions (spells, special moves) have a `cast_time`. When a unit performs a slow action, it doesn't act immediately. It enters a "casting" state and its turn only resolves after its `CT` fills up again by the `cast_time` amount. This makes fast, weak actions and slow, powerful actions a deep tactical choice.
+    -   [ ] **UI:** The Turn Order UI must clearly show not just *who* is next, but *when*, visually representing the CT of all units.
 
-### 1.4. World Map & Navigation
-- **Style:** A point-to-point node-based map, similar to FFT. Players click on locations to travel.
-- **Random Encounters:** While traveling between locations, there's a chance of encountering random battles with generic enemy units. The frequency can be managed (e.g., an item to reduce encounters).
-- **Fixed Encounters:** Story battles will occur at specific locations when the plot dictates.
-- **Locations:**
-    - **Towns/Cities:** Hubs for story events, shops, taverns (for rumors or side quests).
-    - **Dungeons/Battlefields:** Locations where story battles or optional battles take place.
-    - **Shops:** Buy/sell equipment, items, and possibly abilities. Shop inventory may update as the story progresses or with liberation/control of areas.
-    - **Taverns/Guilds:** Places to gather information, find side quests, or recruit generic units.
+3.  **Deep Combat Mechanics:**
+    -   [ ] **Damage Formula:** `FinalDamage = (BasePower * StatFactor - TargetDefense) * Multipliers`.
+        -   `BasePower` comes from the Skill/Weapon.
+        -   `StatFactor` is `Attacker.Attack` for physical, `Attacker.MagicAttack` for magical.
+        -   `TargetDefense` is `Defender.Defense` or `Defender.MagicDefense`.
+        -   `Multipliers` is a product of all bonuses: `ElementalWeakness * PositionalBonus * HeightAdvantage * CriticalDamage * Buffs`.
+    -   [ ] **Area of Effect (AoE):** Skills must support multiple AoE patterns loaded from their RON definition: Line, Cone, Self-Centered Radius, Cross, etc. The targeting UI must accurately preview these shapes.
+    -   [ ] **Status Effects:** Implement a full suite: Poison, Blind, Silence, Slow, Haste, Stop, Charm, Berserk, Petrify, Regen. The `turn_manager` must apply their effects (damage, skipping turns, etc.) at the correct time.
 
-### 1.5. Character Progression
-- **Experience Points (EXP):** Characters gain EXP for actions in combat (attacking, using skills, defeating enemies).
-- **Leveling Up:** Gaining enough EXP results in a level up, which increases base stats (HP, MP, Strength, Magic, Speed, etc.). Stat growth will be influenced by the character's current job.
-- **Stat Growth:** Each job will have different multipliers for stat growth upon leveling up. Characters will also have innate base stat growth.
-- **Equipment:**
-    - **Weapon:** Main hand.
-    - **Shield/Off-hand:** Secondary item or two-handed weapon.
-    - **Head:** Helmets, hats.
-    - **Body:** Armor, robes.
-    - **Accessory:** Rings, cloaks, boots providing various bonuses.
-    - Equipment provides stat boosts and can sometimes grant special abilities or resistances. Job restrictions will apply to equippable gear.
-- **Recruitment:**
-    - **Story Characters:** Automatically join as the plot progresses.
-    - **Generic Units:** Can be recruited from towns or after certain battles, allowing players to customize their party with different jobs from the start.
-    - **Special Recruits:** Optional characters that may require specific conditions or side quests to be completed.
-- **Permadeath:** A classic feature of the genre. If a character's HP drops to 0, they enter a "downed" state. If not revived within a certain number of turns (e.g., 3 turns), they are permanently removed from the party. This will be an optional setting (Hardcore/Classic vs. Casual mode).
+4.  **Battle UI - Information is Power:**
+    -   [ ] **Prediction Window:** Before confirming an action, show a detailed forecast: `Predicted Damage`, `Hit Chance %`, `Crit Chance %`. This is a critical quality-of-life feature from the classics.
+    -   [ ] **Combat Log:** A scrollable log of all actions, damage, and events in the battle.
+    -   [ ] **Inspect Mode:** Allow the player to hover over or click any unit (player or enemy) at any time to see its full stats, equipment, and status effects.
 
-### 1.6. In-Game Economy
-- **Currency:** A single type of currency (e.g., Gil, Gold).
-- **Sources of Income:**
-    - Winning battles (story and random).
-    - Completing side quests.
-    - Selling unwanted items and equipment.
-    - Treasure chests found in battle or on the world map.
-- **Expenses:**
-    - Buying new weapons, armor, accessories.
-    - Purchasing consumable items (potions, status ailment cures).
-    - Fees for recruiting generic units.
-    - (Potentially) Fees for learning certain high-level abilities or job changes.
-- **Item Rarity & Value:** Items will have different tiers of rarity and cost, with more powerful items being more expensive and harder to find.
-- **Shops:** Shop inventories will expand as the player progresses through the story or liberates new regions. Some rare items might only be found in specific locations or as drops from tough enemies.
+**Milestone 1:** A single battle that feels strategically complete. A veteran of the genre could play this one map for an hour and appreciate its depth.
 
-## 2. Development Phases (MVP Focus)
+---
 
-With the goal of rapidly developing a playable browser-based MVP/Demo, the development phases are restructured to prioritize this initial version. The original, more extensive phases are considered "Post-MVP" and can be revisited if the MVP proves successful and further development is pursued.
+### **Phase 2: The Character Engine - Systemic Depth & Progression (10-16 Weeks)**
 
-### Phase 1 (MVP): Browser-Based Combat Core (Est. 2-4 Weeks)
-- **Goal:** Develop a functional and playable minimalist tactical combat demo in a web browser using JavaScript and HTML5 Canvas.
-- **Core Technologies:** Vanilla JavaScript (ES6+), HTML5 Canvas for rendering, basic HTML/CSS for structure.
-- **Key Features (as per MVP Scope in Core Mechanics):**
-    - **Basic HTML Page Setup:** A single HTML page to host the game.
-    - **Canvas Grid Rendering:** Draw a small, fixed-size grid (e.g., 8x8).
-    - **Unit Rendering:** Simple visual representation for 1 player unit and 1-2 enemy units (e.g., colored squares/circles).
-    - **Turn Management:** Basic alternating turn system (Player -> Enemy -> Player). Visual indicator of the current turn.
-    - **Player Unit Control:**
-        - Select player unit.
-        - Click on an adjacent valid tile to move the unit.
-        - Click on an adjacent enemy unit to perform a basic attack.
-    - **Enemy AI (Simple):**
-        - Enemy units move towards the player unit if not adjacent.
-        - Enemy units attack the player unit if adjacent.
-    - **Combat Resolution:**
-        - Units have minimal HP (e.g., 2-3 HP).
-        - Attacks deal fixed damage (e.g., 1 HP).
-        - Visual feedback for attacks (e.g., unit flashes red).
-        - Units are removed from the grid when HP reaches 0.
-    - **Win/Loss Conditions:**
-        - **Win:** Player defeats all enemy units. Display a simple "You Win!" message.
-        - **Loss:** Player's unit is defeated. Display a simple "You Lose!" message.
-    - **Minimal UI:**
-        - Display unit HP (e.g., small number next to unit).
-        - Buttons or clickable areas for "End Turn" (if manual turn end is desired, otherwise automatic after action).
-        - Clear visual distinction between player and enemy units.
-- **Focus:** Core gameplay loop (Move -> Attack -> Enemy Response). Functionality and playability are paramount. Aesthetics are secondary for the MVP.
-- **Potential Risks (MVP Specific):**
-    - Canvas rendering performance for even simple scenes might be tricky if not optimized from the start (though unlikely for MVP scope).
-    - Implementing even simple grid logic (valid moves, adjacency) can be error-prone.
-    - Vanilla JS state management can become messy quickly; good structure is needed from the outset.
-    - Balancing the simple MVP (e.g., number of enemies, HP) to be engaging enough for a short demo.
-    - Time underestimation, even for a "simple" MVP.
+*Objective: Build the addictive meta-game. This is where the player spends their time when not in battle, and it's what makes them want to *return* to battle.*
 
-### Post-MVP Phases (Placeholder)
-Following a successful MVP, development could proceed by incrementally adding features from the original, more comprehensive roadmap. This might include:
-- **Phase 2 (Post-MVP): Enhanced Combat & Basic Job System:** Introduce more unit types, basic stats, a couple of distinct abilities, and a rudimentary job selection.
-- **Phase 3 (Post-MVP): Narrative & World Elements:** Begin to layer in story elements, a simple world map, and more varied encounters.
-- *Further phases would draw from the original detailed roadmap, adapting as needed.*
+1.  **The Job & Skill System (The Heart of the Game):**
+    -   [ ] **Job System:**
+        -   Every unit has a `PrimaryJob` and a `SecondaryJob`.
+        -   Units gain Job Points (JP) for their `PrimaryJob` by performing actions in battle.
+        -   Spending JP unlocks skills within that job's tree.
+        -   **Mastery:** Once a skill is unlocked, it can be equipped regardless of the unit's current job, provided they have the `Skill Slot` available.
+    -   [ ] **Skill Types:**
+        -   **Action Skills:** Command sets from the equipped `PrimaryJob` (e.g., "Arts of War", "Black Magic").
+        -   **Secondary Skills:** A second action skill set from any *other* job the unit has access to.
+        -   **Reaction Skills:** Triggered by enemy actions (e.g., `Counter`, `Adrenaline Rush`). One slot.
+        -   **Support Skills:** Passive bonuses (e.g., `Attack+20%`, `Half MP Cost`). Multiple slots.
+        -   **Movement Skills:** Passive movement bonuses (e.g., `Ignore Terrain Cost`, `Fly`). One slot.
+    -   [ ] **UI:** Build the comprehensive Job/Skill screen in the `PartyManagement` state to facilitate this deep customization.
 
-The immediate priority is the successful completion and testing of **Phase 1 (MVP): Browser-Based Combat Core**.
+2.  **Loot, Crafting, and Economy:**
+    -   [ ] **Rarity Tiers:** Items have rarities: `Common`, `Uncommon`, `Rare`, `Epic`, `Legendary`. Higher rarities have more and better stat affixes.
+    -   [ ] **Procedural Affixes:** Rare+ items can drop with random bonuses (e.g., "of the Bear" [+STR], "of Haste" [+AGI]).
+    -   [ ] **Crafting System:** Enemies drop materials. A `Blacksmith` menu in the `PartyManagement` state allows crafting new gear and, more importantly, *upgrading* existing gear to add new affixes or improve its base stats.
+    -   [ ] **Shop System:** A basic shop to buy/sell common gear and consumables.
 
-## 3. Technology Stack for Browser-Based MVP
+3.  **Party & Roster Management:**
+    -   [ ] **The Headquarters/Guild Hall:** A central hub UI for navigating all `PartyManagement` functions:
+        -   `Barracks`: View and customize all units in your entire roster (not just the active party).
+        -   `Formation Screen`: Choose which units to take into the next battle.
+        -   `Shop / Blacksmith`
+        -   `Tavern`: A place to pick up side quests and hear rumors (lore).
 
-For the initial Minimum Viable Product (MVP) / Demo, the goal is to create a simple, playable experience directly in a web browser. This dictates a lightweight and readily available technology stack.
+**Milestone 2:** The core gameplay loop is complete and deeply compelling. Players can lose hours just on the equipment and job screens, theory-crafting builds.
 
-### 3.1. Core Technologies
-- **Language: JavaScript (JS)**
-    - **Rationale:** JavaScript is the native language of web browsers, requiring no plugins or complex setup for users to play the game. It has a vast ecosystem of libraries and is well-suited for interactive web applications.
-    - **Considerations:** We will use modern JavaScript (ES6+) for better syntax and features. No complex frameworks (like React, Angular, Vue) will be used for the initial MVP to keep things simple, focusing on vanilla JS for core logic.
-- **Rendering: HTML5 Canvas API**
-    - **Rationale:** The Canvas API provides a powerful 2D drawing surface directly in HTML. It's ideal for rendering grids, sprites (or simple shapes for the MVP), and game effects without external dependencies.
-    - **Considerations:** We'll manage the game loop (update, draw) and handle all rendering logic (drawing grid lines, units, UI elements) directly using Canvas drawing commands.
-- **Structure: HTML & CSS**
-    - **Rationale:** Basic HTML will structure the game page (containing the canvas element, any simple UI buttons, or text displays). CSS will be used for minimal styling of these HTML elements.
-    - **Considerations:** The focus will be on functionality over elaborate design for the MVP.
+---
 
-### 3.2. Art & Animation (MVP Simplification)
-- **Initial Assets:** For the MVP, character and enemy representations might be simple geometric shapes (e.g., colored squares/circles) or placeholder static sprites if readily available.
-- **Animation:** Complex animations will be avoided for the MVP. Movement might be simple position updates, and attacks could be indicated by a brief visual effect (e.g., a flashing color or a projectile line).
+### **Phase 3: The World - Content, Narrative & Variety (Ongoing)**
 
-### 3.3. Version Control
-- **Git:** Still essential. GitHub, GitLab, or Bitbucket will be used for repository hosting.
+*Objective: Flesh out the game with a vast amount of content, making the world feel alive and challenging.*
 
-### 3.4. Project Management & Communication
-- **Tools:** For a solo developer MVP, project management can be simpler (e.g., a checklist). Communication is internal.
+1.  **Mission & Quest System:**
+    -   [ ] Implement diverse battle objectives beyond "kill all enemies": `Protect a VIP`, `Survive for X turns`, `Seize a specific tile`, `Assassinate the Enemy Leader`, `Destroy an object`.
+    -   [ ] **Scripted Events:** A simple event system for mid-battle surprises: enemy reinforcements arriving, a bridge collapsing, the weather changing.
 
-### 3.5. Development Approach for MVP
-- **Focus:** Rapid prototyping of the core combat loop.
-- **Modularity:** While keeping it simple, structure the JavaScript code logically (e.g., separate modules/objects for game state, rendering, unit logic) to allow for easier expansion post-MVP.
-- **No External Libraries (Initially):** To maintain simplicity and control for the MVP, we will avoid external game engines or complex utility libraries unless absolutely necessary.
+2.  **Enemy & Boss Design:**
+    -   [ ] Create dozens of unique enemy classes with their own skill sets. Enemies should feel distinct, not just bags of HP.
+    -   [ ] **Boss Battles:** Design epic, multi-stage boss fights.
+        -   Bosses can be multi-tile entities.
+        -   They have unique "Boss Only" skills that break normal rules.
+        -   They may have phase changes with new attack patterns at 75%, 50%, and 25% HP.
 
-This streamlined stack allows for quick iteration and focuses all effort on delivering a playable core experience in the browser.
+3.  **Narrative Delivery:**
+    -   [ ] Implement a simple but effective dialogue system for pre-battle and post-battle cutscenes (using `bevy_egui` portraits and a text box).
+    -   [ ] Create a `Lore` or `Journal` section in the UI where players can read about characters, locations, and history discovered throughout the game.
 
-## 4. Team Role Considerations
+**Milestone 3:** The game transforms from a system into a world. It has a beginning, a middle, and an end, with dozens of hours of unique content to explore.
 
-### 4.0. MVP Development Team
-For the initial Browser-Based MVP (as outlined in "## 2. Development Phases (MVP Focus)"), the development will be undertaken by a single developer (Jules). This means the roles of Game Designer, Programmer, and initial Artist (using placeholder graphics) and Tester will be consolidated. The primary focus is on implementing the core technical features of the MVP.
+---
 
-The subsequent detailed roles (4.1 to 4.3) provide a broader view for potential team expansion post-MVP.
+### **Phase 4: Polish, Balance & Release (6-8 Weeks)**
 
-Developing a game, especially a tactical RPG, involves various disciplines. For a small indie team, individuals often wear multiple hats. However, understanding the key roles can help in planning and resource allocation.
+*Objective: Go from "feature complete" to "critically acclaimed." Polish is not a feature; it's the entire experience.*
 
-### 4.1. Core Roles
+1.  **The "Juice" Factor:**
+    -   [ ] Implement impactful animations, particle effects for spells, screen shake on critical hits, and satisfying sound design.
+    -   [ ] UI must be responsive and fluid. Add subtle animations and transitions.
 
-- **Game Designer:**
-    - **Responsibilities:** Defines the core gameplay mechanics, system design (combat, job system, economy), level design, narrative structure, and overall player experience. Works closely with all other roles to ensure the vision is cohesive. Responsible for documentation like the Game Design Document (GDD).
-    - **Skills:** Strong understanding of game mechanics, creativity, analytical thinking, communication, documentation skills.
+2.  **Ruthless Balancing:**
+    -   [ ] Extensive playtesting with a focus on identifying and nerfing "overpowered" combinations and buffing "useless" skills. The goal is to make many strategies viable, not just one.
+    -   [ ] Create data analysis tools (even simple spreadsheets) to model damage output and progression curves.
 
-- **Programmer(s):**
-    - **Responsibilities:** Writes the code that brings the game to life. Implements game logic, UI, AI, tools for the designers/artists, and ensures game performance and stability.
-    - **Specializations (for larger teams or as needed):** Gameplay programmer, UI programmer, AI programmer, engine/systems programmer.
-    - **Skills:** Proficiency in the chosen programming language and game engine, problem-solving, mathematics, logic.
+3.  **Quality of Life & Accessibility:**
+    -   [ ] A skippable, clear tutorial.
+    -   [ ] Key remapping, volume controls, text scaling, colorblind-friendly UI options.
+    -   [ ] Allow players to speed up animations.
 
-- **Artist(s):**
-    - **Responsibilities:** Creates all visual assets for the game. This includes character sprites/models, animations, environments, UI elements, item icons, and potentially concept art and marketing materials.
-    - **Specializations:**
-        - **Character Artist:** Designs and creates characters and their animations.
-        - **Environment Artist:** Builds the game worlds, battlefields, and props.
-        - **UI Artist:** Designs and implements the user interface and user experience (UI/UX).
-        - **Pixel Artist:** Specializes in pixel art if that's the chosen aesthetic.
-    - **Skills:** Drawing, digital painting, modeling (if 3D), animation, understanding of color theory, composition, and the chosen art style.
-
-- **Writer/Narrative Designer:**
-    - **Responsibilities:** Develops the game's story, writes dialogue, character backstories, lore, quest descriptions, and any in-game text. Ensures the narrative is engaging and integrates well with gameplay.
-    - **Skills:** Creative writing, storytelling, dialogue crafting, understanding of narrative structure.
-
-### 4.2. Supporting Roles (Often combined or outsourced, especially in small teams)
-
-- **Sound Designer/Composer:**
-    - **Responsibilities:** Creates or sources all audio elements: sound effects (SFX) for actions, UI feedback, ambient sounds, and composes the musical score.
-    - **Skills:** Audio engineering, music composition, familiarity with audio software.
-
-- **Quality Assurance (QA) Tester:**
-    - **Responsibilities:** Plays the game extensively to find bugs, exploits, balance issues, and provide feedback on gameplay and user experience. This role is crucial for a polished final product.
-    - **Skills:** Attention to detail, patience, communication, analytical skills. (Often, the whole team participates in QA).
-
-- **Producer/Project Manager:**
-    - **Responsibilities:** Oversees the project's development, manages timelines, budgets (if any), resources, and team communication. Ensures the project stays on track.
-    - **Skills:** Organization, communication, leadership, problem-solving. (In small teams, this is often a lead designer or programmer).
-
-### 4.3. Small Team Dynamics
-- **Wearing Multiple Hats:** In a typical indie team of 2-4 people, roles will heavily overlap. For example:
-    - A programmer might also be the primary game designer.
-    - An artist might also contribute to UI design and some narrative elements.
-    - Everyone is likely a tester.
-- **Core Needs:** Even for a very small team, you'll likely need:
-    - At least one strong **Programmer**.
-    - At least one versatile **Artist**.
-    - Someone to focus on **Game Design and Writing** (can be shared or one of the above).
-- **Outsourcing/Assets:** Consider using pre-made assets (from marketplaces like the Unity Asset Store or Itch.io) for areas where the team lacks expertise or time (e.g., music, some sound effects, certain art assets). This can save significant development time but ensure they fit the game's style.
-
-Clear communication, a shared vision, and a passion for the project are essential for any team, regardless of size.
+4.  **Launch:**
+    -   [ ] Final bug hunt.
+    -   [ ] Package and release on **Itch.io** and/or **Steam**.
+    -   [ ] Prepare for post-launch support and balance patches based on community feedback.
