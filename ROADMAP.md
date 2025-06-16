@@ -1,135 +1,146 @@
-# Game Roadmap: Tactics Saga (Working Title)
+# Roadmap for the Tactics Saga game
 
-## Introduction
-Tactics Saga is a turn-based tactical RPG inspired by classics like Final Fantasy Tactics and Tactics Ogre. This roadmap outlines the development plan, building upon the foundational JavaScript/HTML5 Canvas Minimum Viable Product (MVP). Our goal is to incrementally develop a rich single-player tactical RPG experience.
+## Core Pillars & Philosophy
+-   **Deep Customization:** Player choice must matter profoundly. The joy comes from breaking the system with clever character builds.
+-   **Tactical Depth:** The battlefield itself is a character. Terrain, height, positioning, and turn order are weapons.
+-   **Addictive Progression:** A powerful, rewarding loop of "Battle -> Loot/XP -> Upgrade -> Stronger in next Battle". The player should always be chasing the next power spike.
+-   **Data-Driven Architecture:** The solo developer's creed. The game's code is the *engine*; the game's content lives in RON files. This is non-negotiable for a project of this scope.
 
-## Phase 1: MVP Core Combat (Completed)
-The initial Minimum Viable Product (MVP) successfully established a browser-based tactical combat engine.
-Key achievements of the MVP include:
-- Basic grid and unit rendering (player and enemies).
-- Turn management system.
-- Player unit control: selection, movement, and basic melee attack.
-- Simple enemy AI: movement towards player and basic melee attack.
-- Combat resolution: HP system, fixed damage, unit removal at 0 HP.
-- Win/loss conditions: player wins by defeating all enemies, loses if player unit is defeated.
-- Minimal UI: turn indication, HP display, End Turn button.
+---
 
-All specific MVP features and tasks are documented as completed in the `jules_flow/done/` directory and were marked in previous versions of this roadmap.
+### **Phase 0: The Engine - Architecture & Core Systems (3-4 Weeks)**
 
-## Post-MVP Development Plan
+*Objective: Forge the unbreakable foundation. This phase is pure, unglamorous, but critical systems programming.*
 
-The following phases outline the plan to expand from the MVP to a full-featured tactical RPG with significant depth.
+1.  **Project Scaffolding:**
+    -   Setup project with `cargo`, `bevy`, `serde`, `ron`, `bevy_ecs_tilemap`, `bevy_pathfinding`.
+    -   Establish a strict module structure: `src/main.rs`, `src/state.rs`, `src/systems/`, `src/components.rs`, `src/data_loading.rs`, `src/battle/`.
 
-### Phase 2: Core Architecture & Systems Implementation
-**Goal:** Transition to an isometric perspective with multi-level terrain, establish robust core systems for combat and character management, and implement foundational job and ability mechanics. This phase includes significant architectural setup for future scalability.
-**Key Features:**
-- **Architectural Evolution: Isometric Engine & Rendering:**
-    - Implement a modular **Isometric Grid Engine**: Handles grid data (including heights), coordinate conversions (world to iso, screen to iso), and pathfinding logic considering height and terrain types.
-    - Develop an **Isometric Rendering System**: Updates `drawGrid`, `drawUnit`, `drawVisualEffects` for isometric projection, including robust depth sorting for units and map elements.
-    - Convert mouse click interactions to accurately map to the isometric grid.
-    - Define specifications and implement support for **Sprite Sheet Animations** for units (idle, move, basic attack).
-- **Multi-Level Terrain Mechanics & Interaction:**
-    - Integrate tile height data into the Isometric Grid Engine.
-    - Define and implement rules for unit movement across varying heights (e.g., step height, a 'Jump' stat influencing vertical mobility).
-    - Implement the impact of height on line of sight and attack range/damage calculations (e.g., high ground advantages).
-    - Visually render height differences clearly within the isometric view.
-- **Combat System Foundations:**
-    - Implement a flexible **Action Points (AP) System** governing unit actions per turn.
-    - Define and integrate a comprehensive set of **Core Character Stats**: HP, MP, Speed (for turn order), Move (horizontal range), Jump (vertical range), Physical Attack (PA), Magical Attack (MA), Physical Evasion, Magical Evasion.
-    - Introduce 2-3 distinct enemy types with varied stat profiles and potentially unique passive traits.
-    - Implement foundational **Ranged and Magical Attacks/Skills**, including range calculation (considering height/LoS), MP costs, and initial effects (damage, healing).
-    - Develop a **Data-Driven Damage Calculation Formula** incorporating attacker's PA/MA, target's stats, ability power, and height advantages.
-- **Foundational Job System:**
-    - Allow player units to switch between 3-4 distinct **Starting Jobs** (e.g., Squire, Chemist, Archer, Wizard) each with unique stat modifiers and ability access.
-    - Each job provides 2-3 thematically appropriate, active abilities usable via the AP/MP system.
-    - Implement a **Job Point (JP) System** for earning JP through combat actions and spending JP to unlock/improve abilities.
-- **Core UI for Combat & Character Management (Hybrid Approach):**
-    - **Canvas UI:** AP/MP display per unit, floating damage numbers, status effect icons on units.
-    - **HTML Overlay UI:** Initial implementation of an ability selection menu, and a basic unit status screen accessible during combat.
-- **Data Management & Architecture:**
-    - Implement a **Custom Event Emitter (Pub/Sub)** for managing state changes and decoupling game modules.
-    - Begin **Externalizing Game Data**: Define structures and load initial data for jobs, abilities, and items from JSON files.
+2.  **Data-Driven Asset & Content Pipeline:**
+    -   [ ] **Master Loader System:** A single system responsible for loading all `.ron` files from `assets/data/` into Bevy `Resources` or `Assets` on startup.
+        -   `assets/data/classes/`, `assets/data/races/`, `assets/data/skills/`, `assets/data/items/`, `assets/data/maps/`.
+    -   [ ] **RON Definitions:** Define the Rust `structs` that `serde` will use to parse all data. This includes `ClassData`, `ItemData`, etc., with all their stats and properties.
 
-### Phase 3: Expanding Gameplay - Progression, Economy, Story & World
-**Goal:** Build upon the core systems with robust character progression, a functional in-game economy, the introduction of narrative elements, and a navigable world.
-**Key Features:**
-- **Character Progression System:**
-    - **Experience Points (EXP) & Leveling:** Units gain EXP for actions and level up.
-    - **Stat Growth System:** Stats increase upon level-up, influenced by both base growth and current job modifiers.
-    - **Equipment System:** Implement Weapon, Shield/Off-hand, Armor, Helmet, and Accessory slots. Equipment provides significant stat boosts, resistances, or may grant passive abilities/effects.
-    - Develop more **Sprite Animations** for units (e.g., hit reaction, casting, diverse attack animations).
-- **In-Game Economy & Shops:**
-    - Establish game currency and integrate it with battle rewards.
-    - Design and implement a **Shop System** (via HTML UI) allowing players to buy and sell equipment and consumable items. Shop inventory expands based on story progression.
-- **World Map & Navigation:**
-    - Implement an **Interactive World Map** (node-based) with multiple distinct locations.
-    - Enable player party travel between map nodes, potentially triggering story events or battles.
-    - Design and implement several **Fixed Encounters** with unique objectives and enemy compositions.
-- **Narrative & Storytelling:**
-    - Implement the **First Major Story Arc** (e.g., Chapter 1), including key plot points, character introductions, and motivations.
-    - **Dialogue System (HTML UI):** Create a robust dialogue interface supporting character portraits, text display, and simple branching choices if applicable.
-    - Introduce 2-3 unique **Story Characters** who can join the player's party, each with potential unique starting skills or traits.
-- **UI Development:**
-    - Detailed Character Status Screen (showing all stats, equipment, abilities, resistances via HTML UI).
-    - Inventory Management screen (HTML UI).
-    - Job Change/Ability Management interface (HTML UI).
+3.  **Core Component Library (`components.rs`):**
+    -   [ ] **Identity:** `UnitID(String)`, `Name(String)`, `PlayerControlled`, `AIControlled { profile: AIProfile }`.
+    -   [ ] **Primary Stats:** `PrimaryStats { Strength, Dexterity, Agility, Intelligence, Vitality, Luck }`. These are the character's innate stats.
+    -   [ ] **Secondary Stats:** `DerivedStats { HP, MaxHP, MP, MaxMP, Attack, Defense, MagicAttack, MagicDefense, Hit, Evasion, CritChance, CritDamage, MoveRange, JumpHeight }`. These are calculated from Primary Stats + Equipment + Buffs. A dedicated system will recalculate these whenever gear or status changes.
+    -   [ ] **Battle State:** `GridPosition { x, y, z }`, `ActionPoints(u32)`, `ChargeTime(u32)`, `CurrentStatus(Vec<StatusEffect>)`, `Resistances(HashMap<Element, f32>)`.
 
-### Phase 4: Content Richness & System Depth
-**Goal:** Significantly expand available content (jobs, abilities, enemies, story), deepen existing systems, and introduce more complex tactical elements.
-**Key Features:**
-- **Advanced Job & Ability System:**
-    - Introduce **Advanced and Hybrid Jobs**, unlockable through mastering base jobs.
-    - Significantly expand the list of learnable abilities for all jobs, including **Support and Reaction Abilities**.
-    - Implement a more detailed skill tree or ability progression system for each job (HTML UI).
-- **Combat System Evolution:**
-    - Introduce a wider array of **Status Effects** (buffs and debuffs) with clear visual indicators and mechanical impacts.
-    - Implement diverse **Terrain Types** on battle maps that affect movement, combat, or provide unique tactical opportunities (e.g., water, obstacles, cover, elemental-enhancing tiles), building on height mechanics.
-    - Introduce **Area of Effect (AoE) abilities** with various targeting patterns (visualized on isometric grid).
-    - (Optional based on complexity) Basic **Zone of Control (ZOC)** rules.
-- **Content Expansion:**
-    - Develop a significant portion of the **Main Storyline** (e.g., Chapters 2-3).
-    - Create numerous **New Battle Maps** with diverse tactical challenges, utilizing isometric design and height variations extensively.
-    - Introduce many new **Enemy Types**, including "boss" units with unique abilities and stats.
-    - Expand the roster of available **Equipment and Items**.
-- **AI Enhancements:**
-    - Improve enemy AI to utilize abilities more effectively, consider terrain and height, and potentially react to player strategies.
-- **Visual & Audio Polish:**
-    - Implement a wider range of **Spell/Ability Visual Effects** (potentially using a basic particle engine built on Canvas).
-    - Begin integration of sound effects and music.
+4.  **State Machine:**
+    -   [ ] Implement a robust `GameState` enum: `MainMenu`, `WorldMap`, `PartyManagement`, `BattleLoading`, `Battle`, `BattleVictoryScreen`. This controls which systems run at any given time.
 
-### Phase 5: System Polish & Feature Completion (Beta)
-**Goal:** Refine all existing systems, add more complex features, and aim for a feature-complete beta version of the core game.
-**Key Features:**
-- **Advanced Combat Features (from original section 1.1):**
-    - (This section from previous roadmap seems to largely overlap with what's now detailed in Phase 4's "Combat System Evolution". Consolidate or ensure no redundancy).
-    - Focus on balancing existing advanced features, adding unique encounter mechanics.
-- **Expanded Job System (from original section 1.2):**
-    - (Similar to above, ensure this is an expansion beyond Phase 4, e.g., job-specific unique equipment, ultimate abilities).
-    - Focus on job balance and interplay.
-- **Narrative Deepening & World Expansion (from original sections 1.3, 1.4):**
-    - More story content, potentially concluding the main arc.
-    - Side quests and optional super-bosses or challenge maps.
-    - More locations, lore details.
-- **Character Progression & Customization (from original section 1.5):**
-    - Late-game equipment, rare items.
-    - Generic unit recruitment system refinements.
-    - Permadeath option implementation and testing (if included).
+---
 
-### Phase 6: Alpha/Beta Testing, Balancing, and Content Lock
-**Goal:** Extensive playtesting, balancing of all game systems (jobs, economy, difficulty), bug fixing, and finalizing all content for a release candidate.
+### **Phase 1: The Tactical Core - A Rich "Vertical Slice" (8-12 Weeks)**
 
-### Phase 7: Release and Post-Release Support
-**Goal:** Launch the game and provide ongoing support.
+*Objective: Create a single, deeply tactical battle map that feels like a finished game, just with limited content.*
 
-## Technology Vision (Revised)
-The game will be developed using **JavaScript (ES6+)** and the **HTML5 Canvas API**, evolving the MVP architecture to support a feature-rich tactical RPG:
-- **Core Architecture:**
-    - **Isometric Engine:** A dedicated set of modules will manage isometric grid logic, multi-level terrain, coordinate systems, pathfinding, and rendering (including depth sorting and sprite animation).
-    - **State Management:** A custom **Event Emitter (Pub/Sub) system** will be implemented to manage complex game state and facilitate module communication.
-    - **UI System:** A **hybrid approach** will be used: HTML overlays for complex menus (status, jobs, shops, dialogue) and Canvas for in-combat, world-integrated UI elements.
-- **Data Management:** Game data (jobs, abilities, items, enemies, maps, story) will be externalized using **JSON files**, loaded and managed by a dedicated data module.
-- **Performance:** Ongoing performance optimization will be critical, especially for the isometric rendering and complex game logic.
-- **External Libraries:** Use will be minimal and targeted, only for well-defined needs where vanilla JS/Canvas is significantly inefficient (e.g., potentially a proven audio library or a highly optimized vector math library if needed later).
-- **Modularity:** Emphasis on well-defined modules with clear responsibilities will be maintained.
+1.  **The Living Battlefield:**
+    -   [ ] **Map System:** Load maps from RON files, defining not just tile heights, but tile types (`TileType::Grass`, `::Water`, `::Thorns`, `::Ice`) which affect movement cost and apply status effects on entry.
+    -   [ ] **Line of Sight (LoS):** Implement LoS checks. Archers cannot shoot through mountains. Some spells might ignore LoS.
+    -   [ ] **Camera System:** A polished, player-friendly isometric camera: rotate, pan, zoom, and a "snap to active unit" function.
 
-*(Detailed MVP history, original MVP technology rationale, and general game design discussions remain in PROJECT_BACKGROUND_AND_DESIGN_NOTES.md for reference.)*
+2.  **The "Charge Time" (CT) Turn System (a la FFT):**
+    -   [ ] At the start of every "tick", every unit on the field gains `CT` equal to its `Agility`.
+    -   [ ] When a unit's `CT >= 100`, it gets a turn. Its `CT` is reset to 0.
+    -   [ ] **This is key:** Actions (spells, special moves) have a `cast_time`. When a unit performs a slow action, it doesn't act immediately. It enters a "casting" state and its turn only resolves after its `CT` fills up again by the `cast_time` amount. This makes fast, weak actions and slow, powerful actions a deep tactical choice.
+    -   [ ] **UI:** The Turn Order UI must clearly show not just *who* is next, but *when*, visually representing the CT of all units.
+
+3.  **Deep Combat Mechanics:**
+    -   [ ] **Damage Formula:** `FinalDamage = (BasePower * StatFactor - TargetDefense) * Multipliers`.
+        -   `BasePower` comes from the Skill/Weapon.
+        -   `StatFactor` is `Attacker.Attack` for physical, `Attacker.MagicAttack` for magical.
+        -   `TargetDefense` is `Defender.Defense` or `Defender.MagicDefense`.
+        -   `Multipliers` is a product of all bonuses: `ElementalWeakness * PositionalBonus * HeightAdvantage * CriticalDamage * Buffs`.
+    -   [ ] **Area of Effect (AoE):** Skills must support multiple AoE patterns loaded from their RON definition: Line, Cone, Self-Centered Radius, Cross, etc. The targeting UI must accurately preview these shapes.
+    -   [ ] **Status Effects:** Implement a full suite: Poison, Blind, Silence, Slow, Haste, Stop, Charm, Berserk, Petrify, Regen. The `turn_manager` must apply their effects (damage, skipping turns, etc.) at the correct time.
+
+4.  **Battle UI - Information is Power:**
+    -   [ ] **Prediction Window:** Before confirming an action, show a detailed forecast: `Predicted Damage`, `Hit Chance %`, `Crit Chance %`. This is a critical quality-of-life feature from the classics.
+    -   [ ] **Combat Log:** A scrollable log of all actions, damage, and events in the battle.
+    -   [ ] **Inspect Mode:** Allow the player to hover over or click any unit (player or enemy) at any time to see its full stats, equipment, and status effects.
+
+**Milestone 1:** A single battle that feels strategically complete. A veteran of the genre could play this one map for an hour and appreciate its depth.
+
+---
+
+### **Phase 2: The Character Engine - Systemic Depth & Progression (10-16 Weeks)**
+
+*Objective: Build the addictive meta-game. This is where the player spends their time when not in battle, and it's what makes them want to *return* to battle.*
+
+1.  **The Job & Skill System (The Heart of the Game):**
+    -   [ ] **Job System:**
+        -   Every unit has a `PrimaryJob` and a `SecondaryJob`.
+        -   Units gain Job Points (JP) for their `PrimaryJob` by performing actions in battle.
+        -   Spending JP unlocks skills within that job's tree.
+        -   **Mastery:** Once a skill is unlocked, it can be equipped regardless of the unit's current job, provided they have the `Skill Slot` available.
+    -   [ ] **Skill Types:**
+        -   **Action Skills:** Command sets from the equipped `PrimaryJob` (e.g., "Arts of War", "Black Magic").
+        -   **Secondary Skills:** A second action skill set from any *other* job the unit has access to.
+        -   **Reaction Skills:** Triggered by enemy actions (e.g., `Counter`, `Adrenaline Rush`). One slot.
+        -   **Support Skills:** Passive bonuses (e.g., `Attack+20%`, `Half MP Cost`). Multiple slots.
+        -   **Movement Skills:** Passive movement bonuses (e.g., `Ignore Terrain Cost`, `Fly`). One slot.
+    -   [ ] **UI:** Build the comprehensive Job/Skill screen in the `PartyManagement` state to facilitate this deep customization.
+
+2.  **Loot, Crafting, and Economy:**
+    -   [ ] **Rarity Tiers:** Items have rarities: `Common`, `Uncommon`, `Rare`, `Epic`, `Legendary`. Higher rarities have more and better stat affixes.
+    -   [ ] **Procedural Affixes:** Rare+ items can drop with random bonuses (e.g., "of the Bear" [+STR], "of Haste" [+AGI]).
+    -   [ ] **Crafting System:** Enemies drop materials. A `Blacksmith` menu in the `PartyManagement` state allows crafting new gear and, more importantly, *upgrading* existing gear to add new affixes or improve its base stats.
+    -   [ ] **Shop System:** A basic shop to buy/sell common gear and consumables.
+
+3.  **Party & Roster Management:**
+    -   [ ] **The Headquarters/Guild Hall:** A central hub UI for navigating all `PartyManagement` functions:
+        -   `Barracks`: View and customize all units in your entire roster (not just the active party).
+        -   `Formation Screen`: Choose which units to take into the next battle.
+        -   `Shop / Blacksmith`
+        -   `Tavern`: A place to pick up side quests and hear rumors (lore).
+
+**Milestone 2:** The core gameplay loop is complete and deeply compelling. Players can lose hours just on the equipment and job screens, theory-crafting builds.
+
+---
+
+### **Phase 3: The World - Content, Narrative & Variety (Ongoing)**
+
+*Objective: Flesh out the game with a vast amount of content, making the world feel alive and challenging.*
+
+1.  **Mission & Quest System:**
+    -   [ ] Implement diverse battle objectives beyond "kill all enemies": `Protect a VIP`, `Survive for X turns`, `Seize a specific tile`, `Assassinate the Enemy Leader`, `Destroy an object`.
+    -   [ ] **Scripted Events:** A simple event system for mid-battle surprises: enemy reinforcements arriving, a bridge collapsing, the weather changing.
+
+2.  **Enemy & Boss Design:**
+    -   [ ] Create dozens of unique enemy classes with their own skill sets. Enemies should feel distinct, not just bags of HP.
+    -   [ ] **Boss Battles:** Design epic, multi-stage boss fights.
+        -   Bosses can be multi-tile entities.
+        -   They have unique "Boss Only" skills that break normal rules.
+        -   They may have phase changes with new attack patterns at 75%, 50%, and 25% HP.
+
+3.  **Narrative Delivery:**
+    -   [ ] Implement a simple but effective dialogue system for pre-battle and post-battle cutscenes (using `bevy_egui` portraits and a text box).
+    -   [ ] Create a `Lore` or `Journal` section in the UI where players can read about characters, locations, and history discovered throughout the game.
+
+**Milestone 3:** The game transforms from a system into a world. It has a beginning, a middle, and an end, with dozens of hours of unique content to explore.
+
+---
+
+### **Phase 4: Polish, Balance & Release (6-8 Weeks)**
+
+*Objective: Go from "feature complete" to "critically acclaimed." Polish is not a feature; it's the entire experience.*
+
+1.  **The "Juice" Factor:**
+    -   [ ] Implement impactful animations, particle effects for spells, screen shake on critical hits, and satisfying sound design.
+    -   [ ] UI must be responsive and fluid. Add subtle animations and transitions.
+
+2.  **Ruthless Balancing:**
+    -   [ ] Extensive playtesting with a focus on identifying and nerfing "overpowered" combinations and buffing "useless" skills. The goal is to make many strategies viable, not just one.
+    -   [ ] Create data analysis tools (even simple spreadsheets) to model damage output and progression curves.
+
+3.  **Quality of Life & Accessibility:**
+    -   [ ] A skippable, clear tutorial.
+    -   [ ] Key remapping, volume controls, text scaling, colorblind-friendly UI options.
+    -   [ ] Allow players to speed up animations.
+
+4.  **Launch:**
+    -   [ ] Final bug hunt.
+    -   [ ] Package and release on **Itch.io** and/or **Steam**.
+    -   [ ] Prepare for post-launch support and balance patches based on community feedback.
