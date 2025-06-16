@@ -12,7 +12,7 @@
 
 *Objective: Forge the unbreakable foundation. This phase is pure, unglamorous, but critical systems programming.*
 
-1.  **Project Scaffolding:**
+✅ 1.  **Project Scaffolding:**
     -   Setup project with `cargo`, `bevy`, `serde`, `ron`, `bevy_ecs_tilemap`, `bevy_pathfinding`.
     -   Establish a strict module structure: `src/main.rs`, `src/state.rs`, `src/systems/`, `src/components.rs`, `src/data_loading.rs`, `src/battle/`.
 

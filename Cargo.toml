@@ -1,0 +1,10 @@
+[package]
+name = "tactics_saga_game"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+bevy = "0.12"
+bevy_ecs_tilemap = "0.12"
+ron = "0.10.1"
+serde = { version = "1.0.219", features = ["derive"] }
