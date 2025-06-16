@@ -1,0 +1,8 @@
+(
+    id: "short_sword",
+    name: "Short Sword",
+    description: "A basic sword for beginners.",
+    item_type: Weapon,
+    base_power: Some(5),
+    defense: None,
+)

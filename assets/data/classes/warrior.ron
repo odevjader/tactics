@@ -1,0 +1,12 @@
+(
+    id: "warrior",
+    name: "Warrior",
+    description: "A strong and valiant fighter.",
+    base_attributes: (
+        strength: 10,
+        dexterity: 5,
+        intelligence: 3,
+    ),
+    hp_per_vitality: 10,
+    mp_per_intelligence: 2,
+)

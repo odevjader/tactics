@@ -16,7 +16,7 @@
     -   Setup project with `cargo`, `bevy`, `serde`, `ron`, `bevy_ecs_tilemap`, `bevy_pathfinding`.
     -   Establish a strict module structure: `src/main.rs`, `src/state.rs`, `src/systems/`, `src/components.rs`, `src/data_loading.rs`, `src/battle/`.
 
-2.  **Data-Driven Asset & Content Pipeline:**
+✅ 2.  **Data-Driven Asset & Content Pipeline:**
     -   [ ] **Master Loader System:** A single system responsible for loading all `.ron` files from `assets/data/` into Bevy `Resources` or `Assets` on startup.
         -   `assets/data/classes/`, `assets/data/races/`, `assets/data/skills/`, `assets/data/items/`, `assets/data/maps/`.
     -   [ ] **RON Definitions:** Define the Rust `structs` that `serde` will use to parse all data. This includes `ClassData`, `ItemData`, etc., with all their stats and properties.
