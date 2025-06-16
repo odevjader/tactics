@@ -3,14 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tactics Saga - MVP</title>
+    <title>Isometric Game Engine Test</title>
     <style>
-        body { margin: 0; overflow: hidden; background-color: #000; display: flex; justify-content: center; align-items: center; height: 100vh; }
-        canvas { border: 1px solid #fff; }
+        body { margin: 0; background-color: #333; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; }
+        canvas { border: 1px solid #000; background-color: #fff; margin-bottom: 10px; }
+        #controls { padding: 10px; background-color: #444; border-radius: 5px;}
+        button { padding: 8px 15px; font-size: 16px; cursor: pointer; }
     </style>
 </head>
 <body>
-    <canvas id="gameCanvas"></canvas>
-    <script src="js/main.js"></script>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <div id="controls">
+        <button id="endTurnButton">End Turn</button>
+        <!-- Temporary UI for ability selection -->
+        <button id="selectNextAbilityButton">Next Ability</button>
+        <span id="currentAbilityDisplay" style="color: white; margin-left: 10px;">No Ability</span>
+    </div>
+
+    <!-- Game Data -->
+    <script src="src/game_data/Jobs.js"></script>
+    <script src="src/game_data/Abilities.js"></script> <!-- Added Abilities.js -->
+
+    <!-- Engine Core Files -->
+    <script src="src/engine/isometric/Tile.js"></script>
+    <script src="src/engine/isometric/IsometricGrid.js"></script>
+    <script src="src/engine/isometric/Pathfinding.js"></script>
+    <script src="src/engine/combat/TurnManager.js"></script>
+
+    <!-- Game Object Definitions -->
+    <script src="src/game_objects/Unit.js"></script>
+
+    <!-- Rendering System -->
+    <script src="src/engine/rendering/SpriteSheet.js"></script>
+    <script src="src/engine/rendering/Renderer.js"></script>
+
+    <!-- Main Game Logic/Test Runner -->
+    <script src="src/main.js"></script>
 </body>
 </html>
